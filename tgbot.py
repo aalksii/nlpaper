@@ -52,4 +52,17 @@ if __name__ == '__main__':
     app.add_handler(MessageHandler(filters.Document.ALL, downloader))
     app.add_handler(CommandHandler('send', send_document))
 
+    # app.run_webhook(
+    #     listen='0.0.0.0',
+    #     port=8443,
+    #     secret_token='198345719dahfk',
+    #     url_path=TOKEN,
+    #     # key='private.key',
+    #     # cert='cert.pem',
+    #     webhook_url='https://nlpaper.herokuapp.com/'+TOKEN
+    # )
+
     app.run_polling()
+
+
+
