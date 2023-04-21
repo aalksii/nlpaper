@@ -19,20 +19,22 @@ async def downloader(update, context):
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text='⏳ Please wait, your file '
                                             'is being processed')
-        await file.download_to_drive('paper.pdf')
+        # await file.download_to_drive('paper.pdf')
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text='☹️ Please send PDF file')
 
 
 async def send_document(update, context):
-    chat_id = update.message.chat_id
-    document = open('paper.pdf', 'rb')
-    await context.bot.send_document(chat_id, document)
+    # document = open('paper.pdf', 'rb')
+    # await context.bot.send_document(chat_id, document)
+    await context.bot.send_message(chat_id=update.effective_chat.id,
+                                   text='✅ Here\'s your highlighted '
+                                        'pdf file!')
 
 
 async def start(update, context):
-    welcome_text = "🥳 Welcome to NLPaper!\n" \
+    welcome_text = "🥳 Welcome to NLPaper-bot!\n" \
                    "With our bot, you can quickly and easily " \
                    "highlight the most important information in " \
                    "any research paper. Simply " \
