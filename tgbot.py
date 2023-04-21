@@ -1,10 +1,9 @@
 import logging
+import os
 from pathlib import Path
 
 from telegram.ext import ApplicationBuilder, CommandHandler, \
     MessageHandler, filters
-
-from configs import TOKEN
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -46,23 +45,11 @@ async def start(update, context):
 
 
 if __name__ == '__main__':
+    TOKEN = os.environ['TG_BOT_TOKEN']
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler('start', start))
     app.add_handler(MessageHandler(filters.Document.ALL, downloader))
     app.add_handler(CommandHandler('send', send_document))
 
-    # app.run_webhook(
-    #     listen='0.0.0.0',
-    #     port=8443,
-    #     secret_token='198345719dahfk',
-    #     url_path=TOKEN,
-    #     # key='private.key',
-    #     # cert='cert.pem',
-    #     webhook_url='https://nlpaper.herokuapp.com/'+TOKEN
-    # )
-
     app.run_polling()
-
-
-
