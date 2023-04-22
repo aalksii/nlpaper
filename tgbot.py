@@ -5,6 +5,8 @@ from pathlib import Path
 from telegram.ext import ApplicationBuilder, CommandHandler, \
     MessageHandler, filters
 
+from utils import pdf_to_text, get_ranked_sentences
+
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
@@ -19,6 +21,10 @@ async def downloader(update, context):
                                        text='⏳ Please wait, your file '
                                             'is being processed')
         # await file.download_to_drive('paper.pdf')
+        text = pdf_to_text('example.pdf')
+        ranked_sentences = get_ranked_sentences(text, limit_sentences=1)
+        await context.bot.send_message(chat_id=update.effective_chat.id,
+                                       text=ranked_sentences[0])
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text='☹️ Please send PDF file')
