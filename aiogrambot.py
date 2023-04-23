@@ -30,11 +30,6 @@ async def on_shutdown(dispatcher):
     await bot.delete_webhook()
 
 
-@dp.message_handler()
-async def echo(message: types.Message):
-    await message.answer(message.text)
-
-
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
     welcome_text = '🥳 Welcome to NLPaper!\n' \
@@ -46,13 +41,20 @@ async def send_welcome(message: types.Message):
     await message.reply(welcome_text)
 
 
+@dp.message_handler()
+async def echo(message: types.Message):
+    await message.answer(message.text)
+
+
 @dp.message_handler(content_types=['document'])
 async def document_handler(message: types.Message):
     file_in_io = io.BytesIO()
     if message.content_type == 'document':
         await message.document.download(destination_file=file_in_io)
     print(file_in_io)
-    
+
+    await message.answer('⏳ Please wait, your file is being processed')
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
