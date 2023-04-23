@@ -7,4 +7,4 @@ pytextrank==3.2.4
 txtmarker==1.0.0
 pdfminer.six
 python-telegram-bot[webhooks]
-aiogram
+aiogram==2.25.1
