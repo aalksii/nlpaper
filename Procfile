@@ -1,1 +1,1 @@
-web: python3 aiogrambot.py
+web: python3 src/aiogrambot.py

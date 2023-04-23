@@ -4,6 +4,7 @@ from pathlib import Path
 
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
+from aiogram.utils import executor
 from aiogram.utils.executor import start_webhook
 
 from configs import *
@@ -33,15 +34,27 @@ async def on_shutdown(dispatcher):
     await bot.delete_webhook()
 
 
-@dp.message_handler(commands=['start', 'help'])
+@dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-    welcome_text = '🥳 Welcome to NLPaper!\n' \
-                   'With the bot, you can easily ' \
-                   'find the most important information in ' \
-                   'any research paper. Simply ' \
-                   'upload your paper and the bot will generate ' \
-                   'a pdf file with the highlighted sections!'
-    await message.reply(welcome_text)
+    text = '🥳 Welcome to NLPaper!\n' \
+           'With the bot, you can easily ' \
+           'find the most important information in ' \
+           'any research paper (in English). Simply ' \
+           'upload your paper and the bot will generate ' \
+           'a pdf file with the highlighted sections!\n' \
+           'Max file size is 3 MB. \n' \
+           '❓ If you need help, just write the command /help.'
+    await message.reply(text)
+
+
+@dp.message_handler(commands=['help'])
+async def help_message(message: types.Message):
+    text = 'Q: How it works?\n' \
+           'A: The bot extracts the text from the pdf file, then it ' \
+           'splits the text on sentences, which can be ranked after. ' \
+           'Top n sentences are the most important, so the bot finds ' \
+           'these strings in the pdf file and highlights it.'
+    await message.reply(text)
 
 
 @dp.message_handler(content_types=['document'])
@@ -49,7 +62,7 @@ async def document_handler(message: types.Message):
     if document := message.document:
         file_name = Path(document.file_name)
         if file_name.suffix == '.pdf':
-            await message.reply('⏳ Please wait, your file is being processed')
+            await message.reply('⏳ Please wait, your file is being processed.')
 
             if not os.path.isdir(downloaded_path):
                 os.makedirs(downloaded_path)
@@ -75,13 +88,16 @@ async def document_handler(message: types.Message):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    start_webhook(
-        dispatcher=dp,
-        webhook_path=WEBHOOK_PATH,
-        skip_updates=True,
-        on_startup=on_startup,
-        on_shutdown=on_shutdown,
-        host=WEBAPP_HOST,
-        port=WEBAPP_PORT,
-    )
-    # executor.start_polling(dp, skip_updates=True)
+
+    if use_webhooks:
+        start_webhook(
+            dispatcher=dp,
+            webhook_path=WEBHOOK_PATH,
+            skip_updates=True,
+            on_startup=on_startup,
+            on_shutdown=on_shutdown,
+            host=WEBAPP_HOST,
+            port=WEBAPP_PORT,
+        )
+    else:
+        executor.start_polling(dp, skip_updates=True)

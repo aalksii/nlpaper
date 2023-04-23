@@ -21,15 +21,6 @@ def extract(path):
 
 
 def pdf_to_text(file_path):
-    # reader = PdfReader(file_path)
-    # full_text = ''
-    #
-    # for page in reader.pages:
-    #     text = page.extract_text()
-    #     full_text += text
-    #
-    # full_text = full_text.replace('\n', ' ')
-
     doc = fitz.open(file_path)  # open document
     full_text = []
     for page in doc:  # iterate the document pages
@@ -41,7 +32,6 @@ def pdf_to_text(file_path):
 
 def get_ranked(text, limit_sentences):
     # load a spaCy model, depending on language, scale, etc
-    # nlp = spacy.load("en_core_web_sm")
     try:
         nlp = spacy.load("en_core_web_sm")
     except:  # If not present, we download
@@ -139,11 +129,7 @@ def get_ranked(text, limit_sentences):
     return sentences, ids
 
 
-def highlight_ranked(input_file_path, output_file_path, limit_sentences=3):
-    # text_list = pdf_to_text(input_file_path)
-    # sentences, ids = get_ranked(' '.join(text_list),
-    #                             limit_sentences=limit_sentences)
-
+def highlight_ranked(input_file_path, output_file_path, limit_sentences):
     text = extract(input_file_path)
 
     sentences, ids = get_ranked(text,
