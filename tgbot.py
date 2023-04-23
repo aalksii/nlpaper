@@ -5,7 +5,8 @@ from pathlib import Path
 from telegram.ext import ApplicationBuilder, CommandHandler, \
     MessageHandler, filters
 
-from utils import pdf_to_text, get_ranked_sentences
+from configs import *
+from utils import highlight_ranked
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -16,36 +17,46 @@ logging.basicConfig(
 async def downloader(update, context):
     file = await context.bot.get_file(update.message.document)
     path = Path(file.file_path)
-    if path.suffix == ".pdf":
+    if path.suffix == '.pdf':
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text='⏳ Please wait, your file '
                                             'is being processed')
-        # await file.download_to_drive('paper.pdf')
-        text = pdf_to_text('example.pdf')
-        ranked_sentences = get_ranked_sentences(text, limit_sentences=1)
+
+        if not os.path.isdir(downloaded_path):
+            os.makedirs(downloaded_path)
+        await file.download_to_drive(downloaded_path / input_file_name)
+
+        sentences = highlight_ranked(str(downloaded_path / input_file_name),
+                                     str(downloaded_path / output_file_name),
+                                     limit_sentences=limit_sentences)
+        sentences_text = "\n 👉 ".join([''] + sentences)
+        message = f'🔥 Top {limit_sentences} most important sentences in ' \
+                  f'the text:\n{sentences_text}'
         await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text=ranked_sentences[0])
+                                       text=message)
+
+        await send_document(update, context)
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text='☹️ Please send PDF file')
+                                       text='☹️ Please send PDF file only')
 
 
 async def send_document(update, context):
-    # document = open('paper.pdf', 'rb')
-    # await context.bot.send_document(chat_id, document)
     await context.bot.send_message(chat_id=update.effective_chat.id,
                                    text='✅ Here\'s your highlighted '
                                         'pdf file!')
+    document = open(str(downloaded_path / output_file_name), 'rb')
+    await context.bot.send_document(update.effective_chat.id,
+                                    document)
 
 
 async def start(update, context):
-    welcome_text = "🥳 Welcome to NLPaper-bot!\n" \
-                   "With our bot, you can quickly and easily " \
-                   "highlight the most important information in " \
-                   "any research paper. Simply " \
-                   "upload your paper and our bot will generate " \
-                   "a pdf file with the highlighted sections for " \
-                   "you to download."
+    welcome_text = '🥳 Welcome to NLPaper-bot!\n' \
+                   'With the bot, you can easily ' \
+                   'find the most important information in ' \
+                   'any research paper. Simply ' \
+                   'upload your paper and the bot will generate ' \
+                   'a pdf file with the highlighted sections!'
     await context.bot.send_message(chat_id=update.effective_chat.id,
                                    text=welcome_text)
 
@@ -56,6 +67,5 @@ if __name__ == '__main__':
 
     app.add_handler(CommandHandler('start', start))
     app.add_handler(MessageHandler(filters.Document.ALL, downloader))
-    app.add_handler(CommandHandler('send', send_document))
 
     app.run_polling()

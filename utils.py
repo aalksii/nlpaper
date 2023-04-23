@@ -1,24 +1,45 @@
-import spacy
+import re
+
+import fitz
 import pytextrank
+import spacy
+from pdfminer.high_level import extract_text
+from txtmarker.factory import Factory
+
+# from PyPDF2 import PdfReader
 
 print(pytextrank.__version__)
-from PyPDF2 import PdfReader
+
+
+def extract(path):
+    text = extract_text(path)
+
+    # Clean data
+    text = re.sub(r"\n+", " ", text)
+    text = re.sub(r"[^\x20-\x7F]+", "", text)
+    return text
 
 
 def pdf_to_text(file_path):
-    reader = PdfReader(file_path)
-    full_text = ''
+    # reader = PdfReader(file_path)
+    # full_text = ''
+    #
+    # for page in reader.pages:
+    #     text = page.extract_text()
+    #     full_text += text
+    #
+    # full_text = full_text.replace('\n', ' ')
 
-    for page in reader.pages:
-        text = page.extract_text()
-        full_text += text
-
-    full_text = full_text.replace('\n', ' ')
+    doc = fitz.open(file_path)  # open document
+    full_text = []
+    for page in doc:  # iterate the document pages
+        text = page.get_text().encode("utf8")  # get plain text (is in UTF-8)
+        full_text.append(str(text).replace('\n', ' '))
 
     return full_text
 
 
-def get_ranked_sentences(text, limit_sentences=3):
+def get_ranked(text, limit_sentences):
     # load a spaCy model, depending on language, scale, etc
     nlp = spacy.load("en_core_web_sm")
 
@@ -31,8 +52,6 @@ def get_ranked_sentences(text, limit_sentences=3):
     #     print(phrase.text)
     #     print(phrase.rank, phrase.count)
     #     print(phrase.chunks)
-
-    from icecream import ic
 
     # for p in doc._.phrases:
     #     ic(p.rank, p.count, p.text)
@@ -99,15 +118,65 @@ def get_ranked_sentences(text, limit_sentences=3):
     num_sent = 0
 
     sentences = []
+    ids = []
 
     for sent_id, rank in sorted(sent_rank.items(), key=itemgetter(1)):
         # ic(sent_id, sent_text[sent_id])
 
         sentences.append(sent_text[sent_id])
+        ids.append(sent_id)
 
         num_sent += 1
 
         if num_sent == limit_sentences:
             break
 
+    return sentences, ids
+
+
+def highlight_ranked(input_file_path, output_file_path, limit_sentences=3):
+    # text_list = pdf_to_text(input_file_path)
+    # sentences, ids = get_ranked(' '.join(text_list),
+    #                             limit_sentences=limit_sentences)
+
+    text = extract(input_file_path)
+
+    sentences, ids = get_ranked(text,
+                                limit_sentences=limit_sentences)
+
+    # doc = fitz.open(input_file_path)
+    #
+    # for sentence in sentences:
+    #     for word in sentence.split(' '):
+    #         for page in doc:
+    #             text_instances = page.search_for(word)
+    #             if text_instances:
+    #                 for inst in text_instances:
+    #                     highlight = page.add_highlight_annot(inst)
+    #                     highlight.update()
+    #
+    # doc.save(output_file_path, garbage=4, deflate=True, clean=True)
+
+    highlights = []
+    for i, sentence in enumerate(sentences):
+        highlights.append((
+            get_importance(i, limit_sentences),
+            '(.|\n)*'.join([
+                ' '.join([sentence.split(' ')[0],
+                          sentence.split(' ')[1]]),
+                sentence.split(' ')[-1]
+                # ' '.join([sentence.split(' ')[-2],
+                #           sentence.split(' ')[-1]])
+            ]),
+        ))
+
+    print(highlights)
+
+    highlighter = Factory.create("pdf")
+    highlighter.highlight(input_file_path, output_file_path, highlights)
+
     return sentences
+
+
+def get_importance(rank, n):
+    return '!' * (n - rank)

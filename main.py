@@ -1,6 +1,7 @@
-from utils import pdf_to_text, get_ranked_sentences
+from utils import highlight_ranked
+from configs import *
 
-text = pdf_to_text('example.pdf')
-ranked_sentences = get_ranked_sentences(text)
-print(ranked_sentences)
-print()
+
+highlight_ranked(str(downloaded_path / input_file_name),
+                 str(downloaded_path / output_file_name),
+                 limit_sentences=limit_sentences)
