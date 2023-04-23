@@ -6,4 +6,4 @@ pymupdf==1.22.1
 pytextrank==3.2.4
 txtmarker==1.0.0
 pdfminer.six
-'python-telegram-bot[webhooks]'
+python-telegram-bot[webhooks]
