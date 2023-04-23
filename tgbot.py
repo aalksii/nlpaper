@@ -13,8 +13,9 @@ logging.basicConfig(
     level=logging.INFO
 )
 
+PORT = int(os.environ.get('PORT', 8443))
+TOKEN = os.environ['TG_BOT_TOKEN']
 
-PORT = int(os.environ.get('PORT', 5000))
 
 async def downloader(update, context):
     file = await context.bot.get_file(update.message.document)
@@ -64,14 +65,13 @@ async def start(update, context):
 
 
 if __name__ == '__main__':
-    TOKEN = os.environ['TG_BOT_TOKEN']
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler('start', start))
     app.add_handler(MessageHandler(filters.Document.ALL, downloader))
-    app.run_webhook(listen='0.0.0.0',
+    app.run_webhook(listen='localhost',
                     port=PORT,
                     url_path=TOKEN,
-                    webhook_url='https://nlpaper.herokuapp.com/' + TOKEN)
+                    webhook_url='https://nlpaper.herokuapp.com/')
 
     # app.run_polling()
