@@ -41,7 +41,12 @@ def pdf_to_text(file_path):
 
 def get_ranked(text, limit_sentences):
     # load a spaCy model, depending on language, scale, etc
-    nlp = spacy.load("en_core_web_sm")
+    # nlp = spacy.load("en_core_web_sm")
+    try:
+        nlp = spacy.load("en_core_web_sm")
+    except:  # If not present, we download
+        spacy.cli.download("en_core_web_sm")
+        nlp = spacy.load("en_core_web_sm")
 
     # add PyTextRank to the spaCy pipeline
     nlp.add_pipe("textrank")
