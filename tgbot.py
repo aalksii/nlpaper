@@ -14,8 +14,7 @@ logging.basicConfig(
 )
 
 
-# import en_core_web_sm
-# nlp = en_core_web_sm.load()
+PORT = int(os.environ.get('PORT', 5000))
 
 async def downloader(update, context):
     file = await context.bot.get_file(update.message.document)
@@ -70,5 +69,7 @@ if __name__ == '__main__':
 
     app.add_handler(CommandHandler('start', start))
     app.add_handler(MessageHandler(filters.Document.ALL, downloader))
+    app.run_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN,
+                    webhook_url='https://nlpaper.herokuapp.com/' + TOKEN)
 
     app.run_polling()
