@@ -53,7 +53,7 @@ async def send_document(update, context):
 
 
 async def start(update, context):
-    welcome_text = '🥳 Welcome to NLPaper-bot!\n' \
+    welcome_text = '🥳 Welcome to NLPaper!\n' \
                    'With the bot, you can easily ' \
                    'find the most important information in ' \
                    'any research paper. Simply ' \
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     app.add_handler(CommandHandler('start', start))
     app.add_handler(MessageHandler(filters.Document.ALL, downloader))
-    app.run_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN,
-                    webhook_url='https://nlpaper.herokuapp.com/' + TOKEN)
+    # app.run_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN,
+    #                 webhook_url='https://nlpaper.herokuapp.com/' + TOKEN)
 
     app.run_polling()
