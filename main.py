@@ -1,5 +1,5 @@
-from utils import highlight_ranked
 from configs import *
+from utils import highlight_ranked
 
 
 highlight_ranked(str(downloaded_path / input_file_name),

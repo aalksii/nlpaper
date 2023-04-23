@@ -13,6 +13,8 @@ logging.basicConfig(
     level=logging.INFO
 )
 
+import en_core_web_sm
+nlp = en_core_web_sm.load()
 
 async def downloader(update, context):
     file = await context.bot.get_file(update.message.document)
