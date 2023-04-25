@@ -6,3 +6,4 @@ pytextrank==3.2.4
 txtmarker==1.0.0
 pdfminer.six
 aiogram==2.25.1
+nltk==3.8.1

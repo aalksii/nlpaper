@@ -49,7 +49,7 @@ async def send_welcome(message: types.Message):
 
 @dp.message_handler(commands=['help'])
 async def help_message(message: types.Message):
-    text = 'Q: How it works?\n' \
+    text = 'Q: How does it work?\n' \
            'A: The bot extracts the text from the pdf file, then it ' \
            'splits the text on sentences, which can be ranked after. ' \
            'Top n sentences are the most important, so the bot finds ' \
@@ -64,23 +64,32 @@ async def document_handler(message: types.Message):
         if file_name.suffix == '.pdf':
             await message.reply('⏳ Please wait, your file is being processed.')
 
+            user_id = message.from_user.id
+            input_path = str(downloaded_path / (str(user_id) + '_'
+                                                + str(input_file_name)))
+            output_path = str(downloaded_path / (str(user_id) + '_'
+                                                 + str(output_file_name)))
+
             if not os.path.isdir(downloaded_path):
                 os.makedirs(downloaded_path)
             await document.download(
-                destination_file=downloaded_path / input_file_name
+                destination_file=input_path
             )
 
-            sentences = highlight_ranked(
-                str(downloaded_path / input_file_name),
-                str(downloaded_path / output_file_name),
-                limit_sentences=limit_sentences)
-            sentences_text = "\n 👉 ".join([''] + sentences)
+            sentences = highlight_ranked(input_path,
+                                         output_path,
+                                         limit_sentences=limit_sentences)
+            sentences_text = '\n 👉 '.join([''] + sentences)
             text = f'🔥 Top {limit_sentences} most important sentences in ' \
                    f'the text:\n{sentences_text}'
             await message.reply(text)
 
-            doc = open(downloaded_path / output_file_name, 'rb')
+            doc = open(output_path, 'rb')
             await message.reply_document(doc)
+
+            # delete this file:
+            if os.path.exists(output_path):
+                os.remove(output_path)
 
         else:
             await message.reply('☹️ We can process PDF files only.')
