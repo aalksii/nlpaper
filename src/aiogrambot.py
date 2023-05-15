@@ -8,7 +8,7 @@ from aiogram.utils import executor
 from aiogram.utils.executor import start_webhook
 
 from configs import *
-from utils import highlight_ranked
+from utils import highlight
 
 TOKEN = os.getenv('TG_BOT_TOKEN')
 bot = Bot(token=TOKEN)
@@ -76,9 +76,9 @@ async def document_handler(message: types.Message):
                 destination_file=input_path
             )
 
-            sentences = highlight_ranked(input_path,
-                                         output_path,
-                                         limit_sentences=limit_sentences)
+            sentences = highlight(input_path,
+                                  output_path,
+                                  limit_sentences=limit_sentences)
             sentences_text = '\n 👉 '.join([''] + sentences)
             text = f'🔥 Top {limit_sentences} most important sentences in ' \
                    f'the text:\n{sentences_text}'

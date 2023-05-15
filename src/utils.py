@@ -6,12 +6,15 @@ import spacy
 from pdfminer.high_level import extract_text
 from txtmarker.factory import Factory
 
-# from PyPDF2 import PdfReader
-
 print(pytextrank.__version__)
 
 
 def extract(path):
+    """Use pdfminer for text extraction from a PDF file.
+
+    :param path: Path to PDF
+    :return: Extracted text
+    """
     text = extract_text(path)
 
     # Clean data
@@ -20,17 +23,29 @@ def extract(path):
     return text
 
 
-def pdf_to_text(file_path):
-    doc = fitz.open(file_path)  # open document
+def pdf_to_text(path):
+    """Use fitz for text extraction from a PDF file.
+
+    :param path: Path to PDF
+    :return: Extracted text
+    """
+    doc = fitz.open(path)  # open document
     full_text = []
     for page in doc:  # iterate the document pages
         text = page.get_text().encode("utf8")  # get plain text (is in UTF-8)
         full_text.append(str(text).replace('\n', ' '))
-
     return full_text
 
 
 def get_ranked(text, limit_sentences):
+    """Use spaCy for separating the given text into sentences and then
+    rank them. It uses PyTextRank -- an unsupervised algorithm for the
+    ranking process.
+
+    :param text: Input text
+    :param limit_sentences: Number of sentences to select
+    :return: Ranked sentences
+    """
     # load a spaCy model, depending on language, scale, etc
     try:
         nlp = spacy.load("en_core_web_sm")
@@ -41,16 +56,6 @@ def get_ranked(text, limit_sentences):
     # add PyTextRank to the spaCy pipeline
     nlp.add_pipe("textrank")
     doc = nlp(text)
-
-    # examine the top-ranked phrases in the document
-    # for phrase in doc._.phrases:
-    #     print(phrase.text)
-    #     print(phrase.rank, phrase.count)
-    #     print(phrase.chunks)
-
-    # for p in doc._.phrases:
-    #     ic(p.rank, p.count, p.text)
-    #     ic(p.chunks)
 
     sent_bounds = [[s.start, s.end, set([])] for s in doc.sents]
 
@@ -116,8 +121,6 @@ def get_ranked(text, limit_sentences):
     ids = []
 
     for sent_id, rank in sorted(sent_rank.items(), key=itemgetter(1)):
-        # ic(sent_id, sent_text[sent_id])
-
         sentences.append(sent_text[sent_id])
         ids.append(sent_id)
 
@@ -126,28 +129,22 @@ def get_ranked(text, limit_sentences):
         if num_sent == limit_sentences:
             break
 
-    return sentences, ids
+    return sentences
 
 
-def highlight_ranked(input_file_path, output_file_path, limit_sentences):
-    text = extract(input_file_path)
+def extract_summary(text, limit_sentences):
+    """Use bert-based models and extractive summarization algorithms to
+    select most important sentences from the text.
 
-    sentences, ids = get_ranked(text,
-                                limit_sentences=limit_sentences)
+    :param text: Input text
+    :param limit_sentences: Number of sentences to select
+    :return: Ranked sentences
+    """
+    sentences = []
+    return sentences
 
-    # doc = fitz.open(input_file_path)
-    #
-    # for sentence in sentences:
-    #     for word in sentence.split(' '):
-    #         for page in doc:
-    #             text_instances = page.search_for(word)
-    #             if text_instances:
-    #                 for inst in text_instances:
-    #                     highlight = page.add_highlight_annot(inst)
-    #                     highlight.update()
-    #
-    # doc.save(output_file_path, garbage=4, deflate=True, clean=True)
 
+def highlight_pdf(input_file_path, output_file_path, sentences, limit_sentences):
     highlights = []
     for i, sentence in enumerate(sentences):
         highlights.append((
@@ -156,16 +153,32 @@ def highlight_ranked(input_file_path, output_file_path, limit_sentences):
                 ' '.join([sentence.split(' ')[0],
                           sentence.split(' ')[1]]),
                 sentence.split(' ')[-1]
-                # ' '.join([sentence.split(' ')[-2],
-                #           sentence.split(' ')[-1]])
             ]),
         ))
-
-    print(highlights)
 
     highlighter = Factory.create("pdf")
     highlighter.highlight(input_file_path, output_file_path, highlights)
 
+
+def highlight(
+        input_file_path,
+        output_file_path,
+        limit_sentences,
+        mode='spacy'
+):
+    text = extract(input_file_path)
+
+    if mode == 'spacy':
+        sentences = get_ranked(text, limit_sentences=limit_sentences)
+    elif mode == 'bert':
+        sentences = extract_summary(text, limit_sentences=limit_sentences)
+    else:
+        raise ValueError(f'No such mode {mode}!')
+
+    highlight_pdf(input_file_path,
+                  output_file_path,
+                  sentences,
+                  limit_sentences)
     return sentences
 
 
