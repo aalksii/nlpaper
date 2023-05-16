@@ -132,12 +132,15 @@ def get_ranked(text, limit_sentences):
     return sentences
 
 
-def extract_summary(text, limit_sentences):
+def extract_summary(text,
+                    limit_sentences=None,
+                    ratio=None):
     """Use bert-based models and extractive summarization algorithms to
     select most important sentences from the text.
 
     :param text: Input text
-    :param limit_sentences: Number of sentences to select
+    :param limit_sentences: Number of sentences to be selected
+    :param ratio: Ratio of sentences to be selected
     :return: Ranked sentences
     """
     sentences = []
@@ -163,7 +166,8 @@ def highlight_pdf(input_file_path, output_file_path, sentences, limit_sentences)
 def highlight(
         input_file_path,
         output_file_path,
-        limit_sentences,
+        limit_sentences=None,
+        ratio=None,
         mode='spacy'
 ):
     text = extract(input_file_path)
@@ -171,7 +175,9 @@ def highlight(
     if mode == 'spacy':
         sentences = get_ranked(text, limit_sentences=limit_sentences)
     elif mode == 'bert':
-        sentences = extract_summary(text, limit_sentences=limit_sentences)
+        sentences = extract_summary(text,
+                                    limit_sentences=limit_sentences,
+                                    ratio=ratio)
     else:
         raise ValueError(f'No such mode {mode}!')
 
