@@ -28,17 +28,26 @@ To develop an extractive summarization system for research papers.
 
 ## Dataset
 
-**Link:** 
-[CShorten/ML-ArXiv-Papers](https://huggingface.co/datasets/CShorten/ML-ArXiv-Papers).
+### Link:
+[ml-arxiv-papers](https://huggingface.co/datasets/aalksii/ml-arxiv-papers)
 
-**Description:** 
-The dataset consists of 117592 research paper abstracts from arXiv. The average
-length of the abstracts is 1157 symbols.
+### Description:
+The dataset consists of 117592 research paper abstracts from arXiv. 
+The train-test ratios 0.9:0.1, so it makes 105832 and 11760 rows.
+The original dataset can be found on 
+[Kaggle](https://www.kaggle.com/datasets/Cornell-University/arxiv) and 
+ML papers only version on 
+[CShorten/ML-ArXiv-Papers](https://huggingface.co/datasets/CShorten/ML-ArXiv-Papers). 
+The average length of the abstracts is 1157 symbols.
 
-**Expediency of its use:** 
-The abstracts can be used to fine-tune BERT-based models using masked language
+### Expediency of its use: 
+
+- The abstracts can be used to fine-tune BERT-based models using masked language
 modeling technique. Since a BERT model was pre-trained using only an unlabeled,
 plain text corpus (English Wikipedia, the Brown Corpus), it can be less
 prepared for a scientific language such as that found in arXiv dataset.
 However, the dataset can be edited with masking and fed into the models. Then
 it is possible to use such a fine-tuned model for sentence embeddings.
+
+- The topic of all papers in the dataset is machine learning, so it should
+be easier for a model to adapt to a new domain.
