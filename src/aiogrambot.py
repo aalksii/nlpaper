@@ -7,7 +7,11 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 from aiogram.utils.executor import start_webhook
 
-from configs import *
+from configs.tgbot_config import (downloaded_path,
+                                  input_file_name,
+                                  output_file_name,
+                                  limit_sentences,
+                                  use_webhooks)
 from utils import highlight
 
 TOKEN = os.getenv('TG_BOT_TOKEN')

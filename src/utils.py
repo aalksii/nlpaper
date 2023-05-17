@@ -49,7 +49,7 @@ def get_ranked(text, limit_sentences):
     # load a spaCy model, depending on language, scale, etc
     try:
         nlp = spacy.load("en_core_web_sm")
-    except:  # If not present, we download
+    except OSError:  # If not present, we download
         spacy.cli.download("en_core_web_sm")
         nlp = spacy.load("en_core_web_sm")
 
@@ -147,7 +147,10 @@ def extract_summary(text,
     return sentences
 
 
-def highlight_pdf(input_file_path, output_file_path, sentences, limit_sentences):
+def highlight_pdf(input_file_path,
+                  output_file_path,
+                  sentences,
+                  limit_sentences):
     highlights = []
     for i, sentence in enumerate(sentences):
         highlights.append((
