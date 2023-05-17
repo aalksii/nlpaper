@@ -33,7 +33,7 @@ To develop an extractive summarization system for research papers.
 
 ### Description:
 The dataset consists of 117592 research paper abstracts from arXiv. 
-The train-test ratios 0.9:0.1, so it makes 105832 and 11760 rows.
+The train and test ratios 0.9 and 0.1, so it makes 105832 and 11760 rows.
 The original dataset can be found on 
 [Kaggle](https://www.kaggle.com/datasets/Cornell-University/arxiv) and 
 ML papers only version on 
