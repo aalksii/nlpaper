@@ -61,4 +61,5 @@ jobs:
           cache: 'pip'
       - name: Train
         run: |
+          pip install -r requirements.txt
           python src/train_model.py
