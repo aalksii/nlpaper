@@ -3,7 +3,7 @@ from pathlib import Path
 # Datasets
 dataset_path = Path('data/ml-arxiv-papers/')
 dataset_path_hf = 'aalksii/ml-arxiv-papers'
-select_ratio = 0.1
+select_ratio = 0.001
 test_size = 1 / 9
 
 # Cache
