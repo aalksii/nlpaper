@@ -47,13 +47,13 @@ jobs:
 
     steps:
       - name: Cache Hugging Face data
-          id: cache-huggingface
-          uses: actions/cache@v3
-          with:
-            path: |
-              cache/huggingface
-              data
-            key: huggingface-cache
+        id: cache-huggingface
+        uses: actions/cache@v3
+        with:
+          path: |
+            cache/huggingface
+            data
+          key: huggingface-cache
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
