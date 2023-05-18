@@ -45,7 +45,8 @@ jobs:
       - uses: actions/cache@v3
         id: huggingface-cache
         with:
-          path: ~/.cache/huggingface/
+          path: |
+            ~/.cache/huggingface/
           key: huggingface-cache
 
       - run: |
@@ -53,9 +54,11 @@ jobs:
           python src/process_data.py
 
       - uses: actions/upload-artifact@v3
+
         with:
           name: huggingface-data
-          path: data/
+          path: |
+            data/
 
   train-model:
     name: Train model
@@ -79,7 +82,8 @@ jobs:
       - uses: actions/cache@v3
         id: huggingface-cache
         with:
-          path: ~/.cache/huggingface/
+          path: |
+            ~/.cache/huggingface/
           key: huggingface-cache
 
       - uses: actions/download-artifact@v3
@@ -91,4 +95,5 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: huggingface-models
-          path: models/
+          path: |
+            models/
