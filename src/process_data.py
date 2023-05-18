@@ -79,13 +79,4 @@ def process_dataset():
 
 
 if __name__ == '__main__':
-    print('>>> files:')
-    import os
-    print(os.getcwd())
-    print(os.listdir('.'))
-
     process_dataset()
-
-    print(os.getcwd())
-    print(os.listdir('.'))
-    print(os.listdir('data'))
