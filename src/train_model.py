@@ -30,7 +30,9 @@ def train():
     model = AutoModelForMaskedLM.from_pretrained(model_checkpoint_hf)
 
     # Load prepared dataset
-    processed_dataset = load_from_disk(dataset_path / 'processed_train_dataset')
+    processed_dataset = load_from_disk(
+        dataset_path / 'processed_train_dataset'
+    )
 
     # Show the training loss with every epoch
     logging_steps = len(processed_dataset['train']) // batch_size
