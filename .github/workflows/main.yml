@@ -43,14 +43,14 @@ jobs:
         run: pip install -r requirements.txt
 
       - run: |
-          mkdir -p cache/huggingface
+#          mkdir -p cache/huggingface
           python src/pull_data.py
           python src/process_data.py
 
       - uses: actions/cache@v3
         id: huggingface-cache
         with:
-          path: cache/huggingface
+          path: 'cache/huggingface'
           key: huggingface-cache-${{ hashFiles('cache/huggingface') }}
 
       - uses: actions/upload-artifact@v3
@@ -82,7 +82,7 @@ jobs:
       - uses: actions/cache@v3
         id: huggingface-cache
         with:
-          path: cache/huggingface
+          path: 'cache/huggingface'
           key: huggingface-cache-${{ hashFiles('cache/huggingface') }}
 
       - uses: actions/download-artifact@v3
