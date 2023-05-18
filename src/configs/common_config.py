@@ -1,1 +1,1 @@
-RANDOM_STATE = 42
+random_state = 42

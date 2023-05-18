@@ -5,7 +5,7 @@ from transformers import (
     AutoTokenizer
 )
 
-from configs.common_config import RANDOM_STATE
+from configs.common_config import random_state
 from configs.huggingface_config import (
     dataset_path,
     model_checkpoint_hf,
@@ -36,20 +36,19 @@ def group_texts(examples):
         for k, t in concatenated_examples.items()
     }
     # Create a new labels column
-    result["labels"] = result["input_ids"].copy()
+    result['labels'] = result['input_ids'].copy()
     return result
 
 
 def process_dataset():
     def tokenize_function(examples):
-        result = tokenizer(examples["abstract"])
+        result = tokenizer(examples['abstract'])
         if tokenizer.is_fast:
-            result["word_ids"] = [result.word_ids(i) for i in
-                                  range(len(result["input_ids"]))]
+            result['word_ids'] = [result.word_ids(i) for i in
+                                  range(len(result['input_ids']))]
         return result
 
     # Load cached dataset
-    # dataset = load_dataset(dataset_path / 'train')
     dataset = load_from_disk(dataset_path / 'train')
 
     # Load tokenizer
@@ -68,7 +67,7 @@ def process_dataset():
 
     # Split dataset
     train_val_dataset = lm_datasets.train_test_split(test_size=1 / 9,
-                                                     seed=RANDOM_STATE)
+                                                     seed=random_state)
 
     processed_dataset = DatasetDict({
         'train': train_val_dataset['train'],
