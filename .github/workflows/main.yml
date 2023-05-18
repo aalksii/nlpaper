@@ -22,9 +22,9 @@ jobs:
 
     steps:
       - uses: actions/cache@v3
-          with:
-            path: .cache/huggingface
-            key: ${{ runner.os }}-huggingface
+        with:
+          path: .cache/huggingface
+          key: ${{ runner.os }}-huggingface
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
