@@ -100,13 +100,18 @@ def train():
         tokenizer=tokenizer,
     )
 
-    eval_results = trainer.evaluate()
-    print(f'>>> Perplexity: {math.exp(eval_results["eval_loss"]):.2f}')
+    eval_results = trainer.evaluate()['eval_loss']
+    print(f'>>> (before) Loss: {eval_results:.2f}; '
+          f'Perplexity: {math.exp(eval_results):.2f}')
 
     trainer.train()
 
-    eval_results = trainer.evaluate()
-    print(f'>>> Perplexity: {math.exp(eval_results["eval_loss"]):.2f}')
+    eval_finetuned_results = trainer.evaluate()['eval_loss']
+    print(f'>>> (finetuned) Loss: {eval_finetuned_results:.2f}; '
+          f'Perplexity: {math.exp(eval_finetuned_results):.2f}')
+
+    div = math.exp(eval_results) / math.exp(eval_finetuned_results)
+    print(f'>>> It\'s  {div:.2f} times better!')
 
     if trained_model_path is not None:
         trainer.save_model(trained_model_path)
