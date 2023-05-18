@@ -1,6 +1,6 @@
 from datasets import load_dataset
 from configs.huggingface_config import (
-    dataset_path, dataset_path_huggingface, select_ratio, cache_dir
+    dataset_path, dataset_path_hf, select_ratio, cache_dir
 )
 
 
@@ -10,7 +10,7 @@ def filter_none(example):
 
 def prepare_dataset():
     # Download dataset
-    dataset = load_dataset(dataset_path_huggingface,
+    dataset = load_dataset(dataset_path_hf,
                            cache_dir=cache_dir)
     train = dataset['train']
     test = dataset['test']
