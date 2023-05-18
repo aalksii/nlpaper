@@ -9,7 +9,8 @@ from configs.common_config import random_state
 from configs.huggingface_config import (
     dataset_path,
     model_checkpoint_hf,
-    chunk_size
+    chunk_size,
+    test_size
 )
 
 latex_pattern = r'(\$+)(?:(?!\1)[\s\S])*\1|' \
@@ -66,7 +67,7 @@ def process_dataset():
     lm_datasets = tokenized_dataset.map(group_texts, batched=True)
 
     # Split dataset
-    train_val_dataset = lm_datasets.train_test_split(test_size=1 / 9,
+    train_val_dataset = lm_datasets.train_test_split(test_size=test_size,
                                                      seed=random_state)
 
     processed_dataset = DatasetDict({
