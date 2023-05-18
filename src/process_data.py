@@ -1,3 +1,4 @@
+import os
 import re
 
 from datasets import DatasetDict, load_from_disk
@@ -79,4 +80,8 @@ def process_dataset():
 
 
 if __name__ == '__main__':
+    print('>>> files:')
+    print(os.getcwd())
+    print(os.listdir('..'))
     process_dataset()
+    print(os.getcwd())
