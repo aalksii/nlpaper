@@ -54,11 +54,9 @@ jobs:
           python src/process_data.py
 
       - uses: actions/upload-artifact@v3
-
         with:
           name: huggingface-data
-          path: |
-            data/
+          path: data/
 
   train-model:
     name: Train model
@@ -89,6 +87,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: huggingface-data
+          path: data/
 
       - run: python src/train_model.py
 
