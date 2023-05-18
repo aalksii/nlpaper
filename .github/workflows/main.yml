@@ -20,9 +20,8 @@ jobs:
           key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
       - if: steps.python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements.txt
-      - run: |
-          python -c 'import spacy; print(spacy.__version__)'
-          flake8 src
+
+      - run: flake8 src
 
   prepare-data:
     name: Prepare (pull, process) data
@@ -47,20 +46,16 @@ jobs:
           python src/pull_data.py
           python src/process_data.py
 
-#      - uses: actions/cache@v3
-#        id: huggingface-cache
-#        with:
-#          path: |
-#            cache/huggingface
-#            data
-#          key: huggingface-cache-${{ hashFiles('cache/huggingface') }}-${{ hashFiles('data') }}
+      - uses: actions/cache@v3
+          id: huggingface-cache
+          with:
+            path: cache/huggingface
+            key: huggingface-cache-${{ env.pythonLocation }}
 
       - uses: actions/upload-artifact@v3
         with:
-          name: huggingface-cache-data
-          path: |
-            cache/huggingface
-            data
+          name: huggingface-data
+          path: data
 
   train-model:
     name: Train model
@@ -81,8 +76,19 @@ jobs:
       - if: steps.python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements.txt
 
+      - uses: actions/cache@v3
+          id: huggingface-cache
+          with:
+            path: cache/huggingface
+            key: huggingface-cache-${{ env.pythonLocation }}
+
       - uses: actions/download-artifact@v3
         with:
-          name: huggingface-cache-data
+          name: huggingface-data
 
       - run: python src/train_model.py
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: huggingface-models
+          path: models
