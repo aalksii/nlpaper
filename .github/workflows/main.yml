@@ -14,13 +14,13 @@ jobs:
         id: python-cache
         with:
           python-version: '3.10'
-          cache: 'pip'
-          cache-dependency-path: 'requirements.txt'
-#      - uses: actions/cache@v3.2.4
-#        id: python-cache
-#        with:
-#          path: ${{ env.pythonLocation }}
-#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
+#          cache: 'pip'
+#          cache-dependency-path: 'requirements.txt'
+      - uses: actions/cache@v3
+        id: python-cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
       - if: steps.python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements.txt
       - run: |
@@ -39,13 +39,13 @@ jobs:
         id: python-cache
         with:
           python-version: '3.10'
-          cache: 'pip'
-          cache-dependency-path: 'requirements.txt'
-#      - uses: actions/cache@v3.2.4
-#        id: python-cache
-#        with:
-#          path: ${{ env.pythonLocation }}
-#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
+#          cache: 'pip'
+#          cache-dependency-path: 'requirements.txt'
+      - uses: actions/cache@v3
+        id: python-cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
       - if: steps.python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements.txt
       - run: |
