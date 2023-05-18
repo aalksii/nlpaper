@@ -6,9 +6,6 @@ dataset_path_hf = 'aalksii/ml-arxiv-papers'
 select_ratio = 0.001
 test_size = 1 / 9
 
-# Cache
-cache_dir = Path('cache/huggingface/')
-
 # Models
 model_checkpoint_hf = 'aalksii/distilbert-base-uncased-ml-arxiv-papers'
 trained_model_name = 'distilbert-base-uncased-ml-arxiv-papers-trained'
