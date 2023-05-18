@@ -82,7 +82,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - uses: actions/download-artifact@v3
-          with:
-            name: huggingface-cache-data
+        with:
+          name: huggingface-cache-data
 
       - run: python src/train_model.py
