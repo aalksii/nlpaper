@@ -1,28 +1,16 @@
 import re
-import collections
 
-import numpy as np
-from datasets import load_dataset, DatasetDict, Dataset
+from datasets import DatasetDict, load_from_disk
 from transformers import (
-    AutoModelForMaskedLM,
-    AutoTokenizer,
-    DataCollatorForLanguageModeling,
-    default_data_collator,
-    TrainingArguments,
-    Trainer,
-    AutoConfig,
-    AutoTokenizer,
-    AutoModel,
-    pipeline
+    AutoTokenizer
 )
 
+from configs.common_config import RANDOM_STATE
 from configs.huggingface_config import (
     dataset_path,
     model_checkpoint_hf,
-    chunk_size,
-    wwm_probability
+    chunk_size
 )
-from configs.common_config import RANDOM_STATE
 
 latex_pattern = r'(\$+)(?:(?!\1)[\s\S])*\1|' \
                 r'\\[a-zA-Z]+(?:\{[^\}]+\})?|' \
@@ -44,16 +32,12 @@ def group_texts(examples):
     total_length = (total_length // chunk_size) * chunk_size
     # Split by chunks of max_len
     result = {
-        k: [t[i : i + chunk_size] for i in range(0, total_length, chunk_size)]
+        k: [t[i: i + chunk_size] for i in range(0, total_length, chunk_size)]
         for k, t in concatenated_examples.items()
     }
     # Create a new labels column
     result["labels"] = result["input_ids"].copy()
     return result
-
-
-
-
 
 
 def process_dataset():
@@ -64,38 +48,9 @@ def process_dataset():
                                   range(len(result["input_ids"]))]
         return result
 
-    # def whole_word_masking_data_collator(features):
-    #     for feature in features:
-    #         word_ids = feature.pop("word_ids")
-    #
-    #         # Create a map between words and corresponding token indices
-    #         mapping = collections.defaultdict(list)
-    #         current_word_index = -1
-    #         current_word = None
-    #         for idx, word_id in enumerate(word_ids):
-    #             if word_id is not None:
-    #                 if word_id != current_word:
-    #                     current_word = word_id
-    #                     current_word_index += 1
-    #                 mapping[current_word_index].append(idx)
-    #
-    #         # Randomly mask words
-    #         mask = np.random.binomial(1, wwm_probability, (len(mapping),))
-    #         input_ids = feature["input_ids"]
-    #         labels = feature["labels"]
-    #         new_labels = [-100] * len(labels)
-    #         for word_id in np.where(mask)[0]:
-    #             word_id = word_id.item()
-    #             for idx in mapping[word_id]:
-    #                 new_labels[idx] = labels[idx]
-    #                 input_ids[idx] = tokenizer.mask_token_id
-    #         feature["labels"] = new_labels
-    #
-    #     return default_data_collator(features)
-
-
     # Load cached dataset
-    dataset = load_dataset(dataset_path / 'train')
+    # dataset = load_dataset(dataset_path / 'train')
+    dataset = load_from_disk(dataset_path / 'train')
 
     # Load tokenizer
     tokenizer = AutoTokenizer.from_pretrained(model_checkpoint_hf)
@@ -120,7 +75,7 @@ def process_dataset():
         'val': train_val_dataset['test'],
     })
 
-    processed_dataset.save_to_disk(dataset_path / 'processed_dataset')
+    processed_dataset.save_to_disk(dataset_path / 'processed_train_dataset')
 
 
 if __name__ == '__main__':
