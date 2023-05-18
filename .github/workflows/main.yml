@@ -48,12 +48,12 @@ jobs:
           python src/process_data.py
 
       - uses: actions/cache@v3
-          id: huggingface-cache
-          with:
-            path: |
-              cache/huggingface
-              data
-            key: huggingface-cache-${{ hashFiles('cache/huggingface') }}-${{ hashFiles('data') }}
+        id: huggingface-cache
+        with:
+          path: |
+            cache/huggingface
+            data
+          key: huggingface-cache-${{ hashFiles('cache/huggingface') }}-${{ hashFiles('data') }}
 
   train-model:
     name: Train model
@@ -82,8 +82,7 @@ jobs:
               data
             key: huggingface-cache-${{ hashFiles('cache/huggingface') }}-${{ hashFiles('data') }}
 
-      - run: |
-          python src/train_model.py
+      - run: python src/train_model.py
 
 #    steps:
 #      - name: Cache Hugging Face data
