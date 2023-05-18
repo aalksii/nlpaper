@@ -32,6 +32,6 @@ jobs:
           python-version: '3.10'
           cache: 'pip'
       - name: Pull dataset
-      - run: |
+        run: |
           pip install -r requirements.txt
           python src/pull_data.py
