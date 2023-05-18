@@ -3,4 +3,4 @@ import transformers
 
 print('>>> files:')
 print(os.getcwd())
-print(os.listdir('..'))
+print(os.listdir('.'))
