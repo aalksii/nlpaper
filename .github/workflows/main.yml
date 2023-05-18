@@ -55,7 +55,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: huggingface-data
-          path: data
+          path: data/
 
   train-model:
     name: Train model
@@ -91,4 +91,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: huggingface-models
-          path: models
+          path: models/
