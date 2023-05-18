@@ -21,6 +21,8 @@ from configs.huggingface_config import (
     fp16,
     wwm_probability,
     wwm_collator,
+    num_train_epochs,
+    logging_strategy,
 )
 
 
@@ -48,7 +50,9 @@ def train():
         push_to_hub=push_to_hub,
         fp16=fp16,
         logging_steps=logging_steps,
-        remove_unused_columns=False
+        logging_strategy=logging_strategy,
+        remove_unused_columns=False,
+        num_train_epochs=num_train_epochs
     )
 
     if wwm_collator:
@@ -104,7 +108,8 @@ def train():
     eval_results = trainer.evaluate()
     print(f'>>> Perplexity: {math.exp(eval_results["eval_loss"]):.2f}')
 
-    trainer.save_model(trained_model_path)
+    if trained_model_path is not None:
+        trainer.save_model(trained_model_path)
 
 
 if __name__ == '__main__':

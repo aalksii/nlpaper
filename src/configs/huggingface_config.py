@@ -16,3 +16,7 @@ wwm_probability = 0.15
 push_to_hub = False
 fp16 = False  # Use it for GPU
 wwm_collator = True
+num_train_epochs = -1
+
+# Logging
+logging_strategy = 'epoch'

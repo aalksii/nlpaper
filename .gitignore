@@ -133,3 +133,6 @@ dmypy.json
 **.pdf
 /data/
 cache
+**.json
+**.arrow
+**.bin
