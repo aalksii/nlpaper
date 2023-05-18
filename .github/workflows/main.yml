@@ -43,6 +43,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - run: |
+          mkdir -p cache/huggingface
           python src/pull_data.py
           python src/process_data.py
 

@@ -30,6 +30,10 @@ def train():
     model = AutoModelForMaskedLM.from_pretrained(model_checkpoint_hf)
 
     # Load prepared dataset
+    import os
+    print('>>> files:')
+    print(os.getcwd())
+    print(os.listdir('.'))
     processed_dataset = load_from_disk(
         dataset_path / 'processed_train_dataset'
     )
