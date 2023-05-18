@@ -50,7 +50,7 @@ jobs:
         id: huggingface-cache
         with:
           path: cache/huggingface
-          key: huggingface-cache-${{ env.pythonLocation }}
+          key: huggingface-cache-${{ hashFiles('cache/huggingface') }}
 
       - uses: actions/upload-artifact@v3
         with:
@@ -76,11 +76,13 @@ jobs:
       - if: steps.python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements.txt
 
+      - run: mkdir -p cache/huggingface
+
       - uses: actions/cache@v3
         id: huggingface-cache
         with:
           path: cache/huggingface
-          key: huggingface-cache-${{ env.pythonLocation }}
+          key: huggingface-cache-${{ hashFiles('cache/huggingface') }}
 
       - uses: actions/download-artifact@v3
         with:
