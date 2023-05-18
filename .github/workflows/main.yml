@@ -46,7 +46,7 @@ jobs:
         id: huggingface-cache
         with:
           path: ~/.cache/huggingface/
-          key: huggingface-cache-${{ hashFiles('~/.cache/huggingface/') }}
+          key: huggingface-cache
 
       - run: |
           python src/pull_data.py
@@ -80,7 +80,7 @@ jobs:
         id: huggingface-cache
         with:
           path: ~/.cache/huggingface/
-          key: huggingface-cache-${{ hashFiles('~/.cache/huggingface/') }}
+          key: huggingface-cache
 
       - uses: actions/download-artifact@v3
         with:
