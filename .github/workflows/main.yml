@@ -212,9 +212,11 @@ jobs:
           echo 'Deploying...'
           git config user.name github-actions
           git config user.email github-actions@github.com
-          echo ${{ github.run_id }} > run_id.txt
+          echo 'run_id: ${{ github.run_id }}' > run_id.txt
+          cat run_id.txt
+          git add run_id.txt
           git status
           git checkout production/heroku
-          git add run_id.txt
+          git status
           git commit -m 'Release for run_id: ${{ github.run_id }}'
           git push origin production/heroku
