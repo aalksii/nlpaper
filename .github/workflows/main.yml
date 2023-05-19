@@ -90,9 +90,9 @@ jobs:
           python src/train_model.py
 
       - uses: actions/upload-artifact@v3
-        id: upload-huggingface-models
+        id: upload-huggingface-models-${{ matrix.model_name }}
         with:
-          name: huggingface-models
+          name: huggingface-models-${{ matrix.model_name }}
           path: models
       - name: push model
         env:
@@ -129,21 +129,21 @@ jobs:
         with:
           name: huggingface-data
           path: data
-      - if: steps.upload-huggingface-models.outputs.exists
+      - if: steps.upload-huggingface-models-${{ matrix.model_name }}.outputs.exists
         uses: actions/download-artifact@v3
         with:
-          name: huggingface-models
-          path: models
+          name: huggingface-models-${{ matrix.model_name }}
+          path: models-${{ matrix.model_name }}
 
       - run: |
           echo ${{ matrix.model_name }}
           python src/train_model.py
 
       - uses: actions/upload-artifact@v3
-        id: upload-huggingface-models
+        id: upload-huggingface-models-${{ matrix.model_name }}
         with:
-          name: huggingface-models
-          path: models
+          name: huggingface-models-${{ matrix.model_name }}
+          path: models-${{ matrix.model_name }}
 
       - name: push model
         env:
@@ -176,11 +176,11 @@ jobs:
         with:
           name: huggingface-data
           path: data
-      - if: steps.upload-huggingface-models.outputs.exists
+      - if: steps.upload-huggingface-models-${{ matrix.model_name }}.outputs.exists
         uses: actions/download-artifact@v3
         with:
-          name: huggingface-models
-          path: models
+          name: huggingface-models-${{ matrix.model_name }}
+          path: models-${{ matrix.model_name }}
 
   deploy:
     name: Deploy model
