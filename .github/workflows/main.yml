@@ -94,8 +94,9 @@ jobs:
           python src/train_model.py
 
       - uses: actions/upload-artifact@v3
+        id: upload-huggingface-models
         with:
-          name: huggingface-pre-trained-models
+          name: huggingface-models
           path: models
       - name: push model
         env:
@@ -134,9 +135,10 @@ jobs:
         with:
           name: huggingface-data
           path: data
-      - uses: actions/download-artifact@v3
+      - if: steps.upload-huggingface-models.outputs.exists
+        uses: actions/download-artifact@v3
         with:
-          name: huggingface-pre-trained-models
+          name: huggingface-models
           path: models
 
       - run: |
@@ -144,8 +146,9 @@ jobs:
           python src/train_model.py
 
       - uses: actions/upload-artifact@v3
+        id: upload-huggingface-models
         with:
-          name: huggingface-fine-tuned-models
+          name: huggingface-models
           path: models
 
       - name: push model
@@ -158,7 +161,7 @@ jobs:
     name: Select best model
     runs-on: ubuntu-latest
     needs: fine-tune-model
-    if: false
+    if: always() && needs.fine-tune-model.result != 'failure'
 
     steps:
       - uses: actions/checkout@v3
@@ -181,20 +184,8 @@ jobs:
         with:
           name: huggingface-data
           path: data
-      - uses: actions/download-artifact@v3
+      - if: steps.upload-huggingface-models.outputs.exists
+        uses: actions/download-artifact@v3
         with:
           name: huggingface-pre-trained-models
           path: models
-
-
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: huggingface-fine-tuned-models
-          path: models
-
-      - name: push model
-        env:
-          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-        run: |
-          huggingface-cli login --token $HUGGINGFACE_TOKEN
