@@ -203,8 +203,8 @@ jobs:
   deploy:
     name: Deploy model
     runs-on: ubuntu-latest
-    needs: optimize-model
-    if: always() && needs.optimize-model.result != 'failure'
+#    needs: optimize-model
+#    if: always() && needs.optimize-model.result != 'failure'
 
     steps:
       - uses: actions/checkout@v3
