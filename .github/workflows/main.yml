@@ -221,5 +221,5 @@ jobs:
           git checkout production/heroku
           echo 'run_id: ${{ github.run_id }}' > run_id.txt
           git add .
-          git commit -m 'Release for run_id: ${{ github.run_id }}'
+          git commit -m 'Release for run_id: ${{ github.run_id }} from ${{ github.ref_name }}'
           git push origin production/heroku
