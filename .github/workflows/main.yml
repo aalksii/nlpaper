@@ -158,7 +158,7 @@ jobs:
     name: Select best model
     runs-on: ubuntu-latest
     needs: fine-tune-model
-    if: ${{ false }}
+    if: 'true'
 
     steps:
       - uses: actions/checkout@v3
