@@ -90,7 +90,7 @@ jobs:
           python src/train_model.py
 
       - uses: actions/upload-artifact@v3
-        id: upload-huggingface-models-${{ matrix.model_name }}
+        id: upload-huggingface-models
         with:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
@@ -129,7 +129,7 @@ jobs:
         with:
           name: huggingface-data
           path: data
-      - if: steps.upload-huggingface-models-${{ matrix.model_name }}.outputs.exists
+      - if: steps.upload-huggingface-models.outputs.exists
         uses: actions/download-artifact@v3
         with:
           name: huggingface-models-${{ matrix.model_name }}
@@ -140,7 +140,7 @@ jobs:
           python src/train_model.py
 
       - uses: actions/upload-artifact@v3
-        id: upload-huggingface-models-${{ matrix.model_name }}
+        id: upload-huggingface-models
         with:
           name: huggingface-models-${{ matrix.model_name }}
           path: models-${{ matrix.model_name }}
@@ -176,7 +176,7 @@ jobs:
         with:
           name: huggingface-data
           path: data
-      - if: steps.upload-huggingface-models-${{ matrix.model_name }}.outputs.exists
+      - if: steps.upload-huggingface-models.outputs.exists
         uses: actions/download-artifact@v3
         with:
           name: huggingface-models-${{ matrix.model_name }}
