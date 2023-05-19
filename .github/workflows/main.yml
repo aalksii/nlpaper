@@ -107,7 +107,7 @@ jobs:
   fine-tune-model:
     name: Fine-tune model
     runs-on: ubuntu-latest
-    needs: pre-train-model
+    needs: [prepare-data, pre-train-model]
     if: always() && needs.pre-train-model.result != 'failure'
 
     strategy:
