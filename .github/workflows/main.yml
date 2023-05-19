@@ -92,7 +92,7 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: huggingface-models
+          name: huggingface-pre-trained-models
           path: models
 
       - name: push model
@@ -127,17 +127,20 @@ jobs:
         with:
           path: ~/.cache/huggingface
           key: huggingface-cache
-
       - uses: actions/download-artifact@v3
         with:
           name: huggingface-data
           path: data
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-pre-trained-models
+          path: models
 
       - run: python src/train_model.py
 
       - uses: actions/upload-artifact@v3
         with:
-          name: huggingface-models
+          name: huggingface-fine-tuned-models
           path: models
 
       - name: push model
