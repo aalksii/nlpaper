@@ -104,7 +104,7 @@ def train():
     print(f'>>> (before) Loss: {eval_results:.2f}; '
           f'Perplexity: {math.exp(eval_results):.2f}')
 
-    trainer.train()
+    # trainer.train()
 
     eval_finetuned_results = trainer.evaluate()['eval_loss']
     print(f'>>> (finetuned) Loss: {eval_finetuned_results:.2f}; '
