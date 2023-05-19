@@ -8,203 +8,203 @@ on:
 
 jobs:
 
-#  lint-flake:
-#    name: Lint with flake8
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.10'
-#      - uses: actions/cache@v3
-#        id: python-cache
-#        with:
-#          path: ${{ env.pythonLocation }}
-#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
-#      - if: steps.python-cache.outputs.cache-hit != 'true'
-#        run: pip install -r requirements.txt
-#
-#      - run: flake8 src
-#
-#  prepare-data:
-#    name: Prepare (pull, process) data
-#    runs-on: ubuntu-latest
-#    needs: lint-flake
-#
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.10'
-#      - uses: actions/cache@v3
-#        id: python-cache
-#        with:
-#          path: ${{ env.pythonLocation }}
-#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
-#      - if: steps.python-cache.outputs.cache-hit != 'true'
-#        run: pip install -r requirements.txt
-#      - uses: actions/cache@v3
-#        id: huggingface-cache
-#        with:
-#          path: ~/.cache/huggingface
-#          key: huggingface-cache
-#
-#      - run: |
-#          python src/pull_data.py
-#          python src/process_data.py
-#
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: huggingface-data
-#          path: data
-#
-#  pre-train-model:
-#    name: Pre-train model
-#    runs-on: ubuntu-latest
-#    needs: prepare-data
-#    if: false
-#
-#    strategy:
-#      matrix:
-#        model_name: [distilbert, albert]
-#
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.10'
-#      - uses: actions/cache@v3
-#        id: python-cache
-#        with:
-#          path: ${{ env.pythonLocation }}
-#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
-#      - uses: actions/cache@v3
-#        id: huggingface-cache
-#        with:
-#          path: ~/.cache/huggingface
-#          key: huggingface-cache
-#      - uses: actions/download-artifact@v3
-#        with:
-#          name: huggingface-data
-#          path: data
-#
-#      - run: |
-#          echo ${{ matrix.model_name }}
-#          python src/train_model.py
-#
-#      - uses: actions/upload-artifact@v3
-#        id: upload-huggingface-models
-#        with:
-#          name: huggingface-models-${{ matrix.model_name }}
-#          path: models
-#      - name: push model
-#        env:
-#          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-#        run: |
-#          huggingface-cli login --token $HUGGINGFACE_TOKEN
-#
-#  fine-tune-model:
-#    name: Fine-tune model
-#    runs-on: ubuntu-latest
-#    needs: pre-train-model
-#    if: always() && needs.pre-train-model.result != 'failure'
-#
-#    strategy:
-#      matrix:
-#        model_name: [ distilbert, albert ]
-#
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.10'
-#      - uses: actions/cache@v3
-#        id: python-cache
-#        with:
-#          path: ${{ env.pythonLocation }}
-#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
-#      - uses: actions/cache@v3
-#        id: huggingface-cache
-#        with:
-#          path: ~/.cache/huggingface
-#          key: huggingface-cache
-#      - uses: actions/download-artifact@v3
-#        with:
-#          name: huggingface-data
-#          path: data
-#      - if: steps.upload-huggingface-models.outputs.exists
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: huggingface-models-${{ matrix.model_name }}
-#          path: models
-#
-#      - run: |
-#          echo ${{ matrix.model_name }}
-#          python src/train_model.py
-#
-#      - uses: actions/upload-artifact@v3
-#        id: upload-huggingface-models
-#        with:
-#          name: huggingface-models-${{ matrix.model_name }}
-#          path: models
-#
-#      - name: push model
-#        env:
-#          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-#        run: |
-#          huggingface-cli login --token $HUGGINGFACE_TOKEN
-#
-#  select-model:
-#    name: Select best model
-#    runs-on: ubuntu-latest
-#    needs: [pre-train-model, fine-tune-model]
-#    if: always() && (needs.pre-train-model.result != 'failure' || needs.fine-tune-model.result != 'failure')
-#
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.10'
-#      - uses: actions/cache@v3
-#        id: python-cache
-#        with:
-#          path: ${{ env.pythonLocation }}
-#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
-#      - uses: actions/cache@v3
-#        id: huggingface-cache
-#        with:
-#          path: ~/.cache/huggingface
-#          key: huggingface-cache
-#      - uses: actions/download-artifact@v3
-#        with:
-#          name: huggingface-data
-#          path: data
-#      - uses: actions/download-artifact@v3
-#        with:
-#          name: huggingface-models-distilbert
-#          path: models-distilbert
-#      - uses: actions/download-artifact@v3
-#        with:
-#          name: huggingface-models-albert
-#          path: models-distilbert
-#
-#      - run: echo 'Selecting best model...'
-#
-#  optimize-model:
-#    name: Optimize model
-#    runs-on: ubuntu-latest
-#    needs: select-model
-#    if: false
-#
-#    steps:
-#      - run: echo 'Optimizing...'
+  lint-flake:
+    name: Lint with flake8
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - uses: actions/cache@v3
+        id: python-cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
+      - if: steps.python-cache.outputs.cache-hit != 'true'
+        run: pip install -r requirements-dev.txt
+
+      - run: flake8 src
+
+  prepare-data:
+    name: Prepare (pull, process) data
+    runs-on: ubuntu-latest
+    needs: lint-flake
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - uses: actions/cache@v3
+        id: python-cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
+      - if: steps.python-cache.outputs.cache-hit != 'true'
+        run: pip install -r requirements.txt
+      - uses: actions/cache@v3
+        id: huggingface-cache
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-cache
+
+      - run: |
+          python src/pull_data.py
+          python src/process_data.py
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: huggingface-data
+          path: data
+
+  pre-train-model:
+    name: Pre-train model
+    runs-on: ubuntu-latest
+    needs: prepare-data
+    if: false
+
+    strategy:
+      matrix:
+        model_name: [distilbert, albert]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - uses: actions/cache@v3
+        id: python-cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
+      - uses: actions/cache@v3
+        id: huggingface-cache
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-cache
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-data
+          path: data
+
+      - run: |
+          echo ${{ matrix.model_name }}
+          python src/train_model.py
+
+      - uses: actions/upload-artifact@v3
+        id: upload-huggingface-models
+        with:
+          name: huggingface-models-${{ matrix.model_name }}
+          path: models
+      - name: push model
+        env:
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        run: |
+          huggingface-cli login --token $HUGGINGFACE_TOKEN
+
+  fine-tune-model:
+    name: Fine-tune model
+    runs-on: ubuntu-latest
+    needs: pre-train-model
+    if: always() && needs.pre-train-model.result != 'failure'
+
+    strategy:
+      matrix:
+        model_name: [ distilbert, albert ]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - uses: actions/cache@v3
+        id: python-cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
+      - uses: actions/cache@v3
+        id: huggingface-cache
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-cache
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-data
+          path: data
+      - if: steps.upload-huggingface-models.outputs.exists
+        uses: actions/download-artifact@v3
+        with:
+          name: huggingface-models-${{ matrix.model_name }}
+          path: models
+
+      - run: |
+          echo ${{ matrix.model_name }}
+          python src/train_model.py
+
+      - uses: actions/upload-artifact@v3
+        id: upload-huggingface-models
+        with:
+          name: huggingface-models-${{ matrix.model_name }}
+          path: models
+
+      - name: push model
+        env:
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        run: |
+          huggingface-cli login --token $HUGGINGFACE_TOKEN
+
+  select-model:
+    name: Select best model
+    runs-on: ubuntu-latest
+    needs: [pre-train-model, fine-tune-model]
+    if: always() && (needs.pre-train-model.result != 'failure' || needs.fine-tune-model.result != 'failure')
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - uses: actions/cache@v3
+        id: python-cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
+      - uses: actions/cache@v3
+        id: huggingface-cache
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-cache
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-data
+          path: data
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-models-distilbert
+          path: models-distilbert
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-models-albert
+          path: models-distilbert
+
+      - run: echo 'Selecting best model...'
+
+  optimize-model:
+    name: Optimize model
+    runs-on: ubuntu-latest
+    needs: select-model
+    if: false
+
+    steps:
+      - run: echo 'Optimizing...'
 
   deploy:
     name: Deploy model
     runs-on: ubuntu-latest
-#    needs: optimize-model
-#    if: always() && needs.optimize-model.result != 'failure'
+    needs: optimize-model
+    if: always() && needs.optimize-model.result != 'failure'
 
     steps:
       - uses: actions/checkout@v3

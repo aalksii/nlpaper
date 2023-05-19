@@ -4,6 +4,11 @@ pdfminer.six
 PyMuPDF==1.22.1
 pytextrank==3.2.4
 txtmarker==1.0.0
+datasets~=2.12.0
+evaluate~=0.4.0
+transformers[sentencepiece]~=4.29.2
+accelerate~=0.19.0
+bert-extractive-summarizer~=0.10.1
 spacy~=3.5.2
 cchardet~=2.1.7
 numpy~=1.24.3
