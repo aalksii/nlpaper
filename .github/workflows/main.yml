@@ -133,7 +133,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: huggingface-models-${{ matrix.model_name }}
-          path: models-${{ matrix.model_name }}
+          path: models
 
       - run: |
           echo ${{ matrix.model_name }}
@@ -143,7 +143,7 @@ jobs:
         id: upload-huggingface-models
         with:
           name: huggingface-models-${{ matrix.model_name }}
-          path: models-${{ matrix.model_name }}
+          path: models
 
       - name: push model
         env:
@@ -154,8 +154,8 @@ jobs:
   select-model:
     name: Select best model
     runs-on: ubuntu-latest
-    needs: fine-tune-model
-    if: always() && needs.fine-tune-model.result != 'failure'
+    needs: [pre-train-model, fine-tune-model]
+    if: always() && (needs.pre-train-model.result != 'failure' || needs.fine-tune-model.result != 'failure')
 
     steps:
       - uses: actions/checkout@v3
@@ -180,7 +180,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: huggingface-models-${{ matrix.model_name }}
-          path: models-${{ matrix.model_name }}
+          path: models
 
   deploy:
     name: Deploy model
