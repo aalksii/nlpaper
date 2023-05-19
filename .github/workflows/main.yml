@@ -1,6 +1,10 @@
 name: Main workflow
 
-on: push
+on:
+  push:
+    branches:
+      - main
+      - 'dev/**'
 
 jobs:
 
@@ -203,4 +207,16 @@ jobs:
     if: always() && needs.optimize-model.result != 'failure'
 
     steps:
-      - run: echo 'Deploying...'
+      - uses: actions/checkout@v3
+      - run: |
+          echo ${{ github.run_id }} > run_id.txt
+      - uses: actions/checkout@v3
+        with:
+          ref: production/heroku
+      - run: |
+          echo 'Deploying...'
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add run_id.txt
+          git commit -m 'Release for run_id: ${{ github.run_id }}'
+          git push origin production/heroku
