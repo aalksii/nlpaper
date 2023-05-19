@@ -97,10 +97,10 @@ jobs:
 
       - name: push model
         shell: bash
-          env:
-            HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-          run: |
-            huggingface-cli login --token $HUGGINGFACE_TOKEN
+        env:
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        run: |
+          huggingface-cli login --token $HUGGINGFACE_TOKEN
 
   fine-tune-model:
     name: Fine-tune model
@@ -145,7 +145,7 @@ jobs:
 
       - name: push model
         shell: bash
-          env:
-            HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-          run: |
-            huggingface-cli login --token $HUGGINGFACE_TOKEN
+        env:
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        run: |
+          huggingface-cli login --token $HUGGINGFACE_TOKEN
