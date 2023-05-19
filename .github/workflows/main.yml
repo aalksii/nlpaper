@@ -61,7 +61,7 @@ jobs:
     name: Pre-train model
     runs-on: ubuntu-latest
     needs: prepare-data
-    if: ${{ false }}
+    if: false
 
     strategy:
       matrix:
@@ -107,7 +107,7 @@ jobs:
     name: Fine-tune model
     runs-on: ubuntu-latest
     needs: pre-train-model
-    if: ${{ true }}
+    if: always() && needs.pre-train-model.result != 'failure'
 
     strategy:
       matrix:
@@ -158,7 +158,7 @@ jobs:
     name: Select best model
     runs-on: ubuntu-latest
     needs: fine-tune-model
-    if: 'true'
+    if: false
 
     steps:
       - uses: actions/checkout@v3
