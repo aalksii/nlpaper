@@ -182,11 +182,22 @@ jobs:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
 
+      - run: echo 'Selecting best model...'
+
+  optimize-model:
+    name: Optimize model
+      runs-on: ubuntu-latest
+      needs: select-model
+      if: false
+
+      steps:
+        - run: echo 'Optimizing...'
+
   deploy:
     name: Deploy model
     runs-on: ubuntu-latest
-    needs: select-model
-    if: always() && needs.select-model.result != 'failure'
+    needs: optimize-model
+    if: always() && needs.optimize-model.result != 'failure'
 
     steps:
-      - run: echo 'Deployment'
+      - run: echo 'Deploying...'
