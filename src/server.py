@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 
-from src.predict import fill_mask, summarize
+from predict import fill_mask, summarize
 
 app = Flask(__name__)
 
