@@ -4,7 +4,10 @@ on:
   push:
     branches:
       - main
-      - 'dev/**'
+      - 'releases/**'
+  pull_request:
+    branches:
+      - main
 
 jobs:
 
@@ -210,16 +213,17 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: |
+      - name: Push the release to production branch
+        run: |
           echo 'Deploying...'
 
           git config user.name github-actions
           git config user.email github-actions@github.com
 
-          git push --force origin ${{ github.ref_name }}:production/heroku
+          git push --force origin ${{ github.ref_name }}:prod
 
           git checkout production/heroku
           echo 'run_id: ${{ github.run_id }}' > run_id.txt
           git add .
           git commit -m 'Release for run_id: ${{ github.run_id }} from ${{ github.ref_name }}'
-          git push origin production/heroku
+          git push origin prod
