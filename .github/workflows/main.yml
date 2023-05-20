@@ -222,8 +222,8 @@ jobs:
 
           git push --force origin ${{ github.ref_name }}:prod
 
-          git checkout prod
-          echo 'run_id: ${{ github.run_id }}' > run_id.txt
-          git add .
-          git commit -m 'Release for run_id: ${{ github.run_id }} from ${{ github.ref_name }}'
-          git push origin prod
+#          git checkout prod
+#          echo 'run_id: ${{ github.run_id }}' > run_id.txt
+#          git add .
+#          git commit -m 'Release for run_id: ${{ github.run_id }} from ${{ github.ref_name }}'
+#          git push origin prod

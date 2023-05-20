@@ -16,4 +16,3 @@ x = requests.post('http://127.0.0.1:5000/api/summarize', json={
          'of cardiometabolic disorders and mortality.'
 })
 print('summarize:', x.text)
-
