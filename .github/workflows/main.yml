@@ -246,9 +246,9 @@ jobs:
       - if: steps.python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements-dev.txt
 
-      - name: Load the best model as an artifact
+      - if: steps.upload-huggingface-best-model.outputs.cache-hit != 'true'
+        name: Load the best model as an artifact
         uses: actions/download-artifact@v3
-        id: download-huggingface-best-model
         with:
           name: huggingface-models-best-model
           path: models
