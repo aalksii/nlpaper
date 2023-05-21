@@ -13,7 +13,7 @@ on:
 jobs:
 
   run-server:
-    name: Run self-hosted REST API server
+    name: Run REST API
     runs-on: self-hosted
 
     steps:
@@ -22,22 +22,24 @@ jobs:
 #        with:
 #          python-version: '3.10'
 #          architecture: 'x64'
-      - uses: actions/cache@v3
-        id: python-cache
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
-      - uses: actions/cache@v3
-        id: huggingface-cache
-        with:
-          path: ~/.cache/huggingface
-          key: huggingface-cache
+#      - uses: actions/cache@v3
+#        id: python-cache
+#        with:
+#          path: ${{ env.pythonLocation }}
+#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
+#      - uses: actions/cache@v3
+#        id: huggingface-cache
+#        with:
+#          path: ~/.cache/huggingface
+#          key: huggingface-cache
 #      - name: Load the best model
 #        uses: actions/download-artifact@v3
 #        with:
 #          name: huggingface-models-best-model
 #          path: models
-      - run: python -V
+      - run: |
+          echo ${{ github.workspace }}
+          python -V
 
 #      - name: Deploy the best model
 #        run: |
