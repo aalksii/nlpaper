@@ -1,0 +1,42 @@
+name: Main workflow
+
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+      - 'dev/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  run-server:
+    name: Run self-hosted REST API server
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+#      - uses: actions/cache@v3
+#        id: python-cache
+#        with:
+#          path: ${{ env.pythonLocation }}
+#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
+      - uses: actions/cache@v3
+        id: huggingface-cache
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-cache
+      - name: Load the best model
+        uses: actions/download-artifact@v3
+        with:
+          name: huggingface-models-best-model
+          path: models
+
+      - name: Deploy the best model
+        run: |
+          python src/server.py
