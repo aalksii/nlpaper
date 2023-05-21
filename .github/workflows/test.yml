@@ -22,23 +22,22 @@ jobs:
 #        with:
 #          python-version: '3.10'
 #          architecture: 'x64'
-#      - uses: actions/cache@v3
-#        id: python-cache
-#        with:
-#          path: ${{ env.pythonLocation }}
-#          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
-#      - uses: actions/cache@v3
-#        id: huggingface-cache
-#        with:
-#          path: ~/.cache/huggingface
-#          key: huggingface-cache
+      - uses: actions/cache@v3
+        id: python-cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
+      - uses: actions/cache@v3
+        id: huggingface-cache
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-cache
 #      - name: Load the best model
 #        uses: actions/download-artifact@v3
 #        with:
 #          name: huggingface-models-best-model
 #          path: models
       - run: python -V
-      - run: conda activate nlpaper
 
 #      - name: Deploy the best model
 #        run: |
