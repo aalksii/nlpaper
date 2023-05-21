@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 
 from predict import fill_mask, summarize
+from configs.server_config import rest_api_port
 
 app = Flask(__name__)
 
@@ -26,4 +27,4 @@ def summarize_():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=rest_api_port)

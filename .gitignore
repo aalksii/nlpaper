@@ -136,3 +136,5 @@ cache
 **.json
 **.arrow
 **.bin
+**.drawio
+**.dtmp

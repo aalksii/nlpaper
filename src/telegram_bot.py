@@ -13,6 +13,7 @@ from configs.tgbot_config import (downloaded_path,
                                   limit_sentences,
                                   use_webhooks)
 from utils import highlight
+from predict import summarize, fill_mask
 
 TOKEN = os.getenv('TG_BOT_TOKEN')
 bot = Bot(token=TOKEN)
@@ -97,6 +98,13 @@ async def document_handler(message: types.Message):
 
         else:
             await message.reply('☹️ We can process PDF files only.')
+
+
+@dp.message_handler()
+async def message_handler(message: types.Message):
+    # Send POST request to the server with a text user wants to summarize
+
+    await message.reply(fill_mask(message.text))
 
 
 if __name__ == '__main__':
