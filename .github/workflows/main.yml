@@ -255,10 +255,10 @@ jobs:
           key: huggingface-cache
       - name: Load the best model
         uses: actions/upload-artifact@v3
-          id: upload-huggingface-best-model
-          with:
-            name: huggingface-models-best-model
-            path: models
+        id: upload-huggingface-best-model
+        with:
+          name: huggingface-models-best-model
+          path: models
 
       - name: Deploy the best model
         run: |
