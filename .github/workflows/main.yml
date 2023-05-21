@@ -191,10 +191,10 @@ jobs:
 
       - name: Save the best model as an artifact
         uses: actions/upload-artifact@v3
-          id: upload-huggingface-best-model
-          with:
-            name: huggingface-models-best-model
-            path: models
+        id: upload-huggingface-best-model
+        with:
+          name: huggingface-models-best-model
+          path: models
 
   optimize-model:
     name: Optimize model
