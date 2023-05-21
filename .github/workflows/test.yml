@@ -29,19 +29,18 @@ jobs:
           key: ${{ github.workspace }}-${{ hashFiles('requirements-dev.txt') }}
       - if: steps.local-python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements-dev.txt
-#      - uses: actions/cache@v3
-#        id: huggingface-cache
-#        with:
-#          path: ~/.cache/huggingface
-#          key: huggingface-cache
+      - uses: actions/cache@v3
+        id: huggingface-cache
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-cache
 #      - name: Load the best model
 #        uses: actions/download-artifact@v3
 #        with:
 #          name: huggingface-models-best-model
 #          path: models
       - run: |
-          echo ${{ github.workspace }}
-          python -V
+          python src/server.py
 
 #      - name: Deploy the best model
 #        run: |
