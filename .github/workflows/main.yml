@@ -233,6 +233,7 @@ jobs:
   run-server:
     name: Run REST API
     runs-on: self-hosted
+    needs: deploy
 
     steps:
       - uses: actions/checkout@v3
