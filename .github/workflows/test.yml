@@ -23,11 +23,11 @@ jobs:
 #          python-version: '3.10'
 #          architecture: 'x64'
       - uses: actions/cache@v3
-        id: local-python-cache
+        id: python-cache
         with:
           path: ${{ github.workspace }}
           key: ${{ github.workspace }}-${{ hashFiles('requirements-dev.txt') }}
-      - if: steps.local-python-cache.outputs.cache-hit != 'true'
+      - if: steps.python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements-dev.txt
       - uses: actions/cache@v3
         id: huggingface-cache
@@ -39,9 +39,6 @@ jobs:
 #        with:
 #          name: huggingface-models-best-model
 #          path: models
-      - run: |
-          python src/server.py
-
-#      - name: Deploy the best model
-#        run: |
-#          python src/server.py
+      - name: Deploy the best model
+        run: |
+          nohup python src/server.py > output.log &
