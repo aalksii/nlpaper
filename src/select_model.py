@@ -5,10 +5,10 @@ import pandas as pd
 
 
 @click.command
-@click.option('--from_files', '-ff',
+@click.option('--from_files', '-in',
               help='Path to load evaluation metrics',
               multiple=True)
-@click.option('--to_file', '-tf',
+@click.option('--to_file', '-out',
               help='Path to save the best model name')
 def select(from_files, to_file):
     differences = []

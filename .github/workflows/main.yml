@@ -71,8 +71,7 @@ jobs:
 
     strategy:
       matrix:
-        model_name: ['aalksii/distilbert-base-uncased-ml-arxiv-papers',
-                     'aalksii/albert-base-v2-ml-arxiv-papers']
+        model_name: ['distilbert', 'albert']
 
     steps:
       - uses: actions/checkout@v3
@@ -94,19 +93,25 @@ jobs:
           name: huggingface-data
           path: data
 
-      - name: Pre-training ${{ matrix.model_name }}
+      - name: Pre-training distilbert
         run: |
-          python src/evaluate_model.py --input_model_name ${{ matrix.model_name }} --to_file './models/metrics.csv'
-          python src/train_model.py --input_model_name ${{ matrix.model_name }} --output_model_name './models/${{ matrix.model_name }}'
-          python src/evaluate_model.py --input_model_name './models/${{ matrix.model_name }}' --to_file './models/metrics.csv'
-#        if: false
+          python src/evaluate_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
+          python src/train_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/distilbert-base-uncased-ml-arxiv-papers'
+          python src/evaluate_model.py -in './models/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
+        if: matrix.model_name == 'distilbert'
+
+      - name: Pre-training albert
+          run: |
+            python src/evaluate_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
+            python src/train_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/albert-base-v2-ml-arxiv-papers'
+            python src/evaluate_model.py -in './models/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
+          if: matrix.model_name == 'albert'
 
       - uses: actions/upload-artifact@v3
         id: upload-huggingface-models
         with:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
-#        if: false
 
   fine-tune-model:
     name: Fine-tune model
@@ -115,7 +120,7 @@ jobs:
 
     strategy:
       matrix:
-        model_name: [ distilbert, albert ]
+        model_name: ['distilbert', 'albert']
 
     steps:
       - uses: actions/checkout@v3
@@ -146,6 +151,18 @@ jobs:
         run: |
           python src/train_model.py --input_model_name './models/${{ matrix.model_name }}' --output_model_name './models/${{ matrix.model_name }}-finetuned'
           python src/evaluate_model.py --input_model_name './models/${{ matrix.model_name }}-finetuned' --to_file './models/metrics.csv'
+
+      - name: Fine-tuning distilbert
+        run: |
+          python src/train_model.py -in './models/distilbert-base-uncased-ml-arxiv-papers' -out './models/distilbert-base-uncased-ml-arxiv-papers-finetuned'
+          python src/evaluate_model.py -in './models/distilbert-base-uncased-ml-arxiv-papers-finetuned' -out './models/metrics.csv'
+        if: matrix.model_name == 'distilbert'
+
+      - name: Fine-tuning albert
+        run: |
+          python src/train_model.py -in './models/albert-base-v2-ml-arxiv-papers' -out './models/albert-base-v2-ml-arxiv-papers-finetuned'
+          python src/evaluate_model.py -in './models/albert-base-v2-ml-arxiv-papers-finetuned' -out './models/metrics.csv'
+        if: matrix.model_name == 'albert'
 
       - uses: actions/upload-artifact@v3
         id: upload-huggingface-models
@@ -183,6 +200,7 @@ jobs:
         with:
           name: huggingface-data
           path: data
+
       - uses: actions/download-artifact@v3
         with:
           name: huggingface-models-distilbert
@@ -194,13 +212,13 @@ jobs:
 
       - name: Select the best model
         run: |
-          python src/select_model.py -ff './models-distilbert/metrics.csv' -ff './models-albert/metrics.csv' -tf './models/best_model_name.txt'
+          python src/select_model.py -in './models-distilbert/metrics.csv' -in './models-albert/metrics.csv' -out './models/best_model_name.txt'
 
       - name: Save the best model as an artifact
         uses: actions/upload-artifact@v3
         id: upload-huggingface-best-model
         with:
-          name: huggingface-models-best-model
+          name: huggingface-best-model
           path: models
 
   optimize-model:
@@ -259,7 +277,7 @@ jobs:
         name: Load the best model as an artifact
         uses: actions/download-artifact@v3
         with:
-          name: huggingface-models-best-model
+          name: huggingface-best-model
           path: models
 
       - name: Deploy model

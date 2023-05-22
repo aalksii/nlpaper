@@ -11,10 +11,10 @@ from trainer import load_trainer
 
 
 @click.command
-@click.option('--input_model_name',
+@click.option('--input_model_name', '-in',
               default=model_checkpoint_hf,
               help='Path to model or name on Hugging Face')
-@click.option('--to_file',
+@click.option('--to_file', '-out',
               default=eval_metrics_path,
               help='Path to save evaluation metrics')
 def evaluate(input_model_name, to_file):
