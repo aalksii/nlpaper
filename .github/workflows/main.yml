@@ -110,8 +110,6 @@ jobs:
         run: |
           python src/evaluate_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
           python src/train_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/albert-base-v2-ml-arxiv-papers'
-#          python src/evaluate_model.py -in 'albert-base-v2' -out './models/metrics.csv'
-#          python src/train_model.py -in 'albert-base-v2' -out './models/albert-base-v2-ml-arxiv-papers'
           python src/evaluate_model.py -in './models/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
         if: matrix.model_name == 'albert'
 
