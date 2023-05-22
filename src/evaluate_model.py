@@ -1,4 +1,5 @@
 import math
+import os
 import time
 from pathlib import Path
 
@@ -23,10 +24,14 @@ def evaluate(input_model_name, to_file):
                            input_model_name,
                            push_to_hub=False)
 
+    print(os.listdir('.'))
+
     start_time = time.time()
     loss = trainer.evaluate()['eval_loss']
     diff_time = time.time() - start_time
     ppl = math.exp(loss)
+
+    print(os.listdir('.'))
 
     print(f'>>> Loss: {loss:.2f}; '
           f'Perplexity: {ppl:.2f}; '
@@ -34,6 +39,7 @@ def evaluate(input_model_name, to_file):
           f'Model: {input_model_name}')
 
     Path(to_file).parent.mkdir(parents=True, exist_ok=True)
+    print(os.listdir('.'))
     with open(to_file, 'a+') as file:
         file.write(f'{input_model_name};{loss};{ppl};{diff_time}\n')
 

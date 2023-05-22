@@ -1,5 +1,3 @@
-import os
-
 import click
 
 from configs.huggingface_config import (
@@ -18,7 +16,6 @@ from trainer import load_trainer
               help='Path to save the trained model')
 def train(input_model_name, output_model_path):
     print(input_model_name, output_model_path)
-    print(os.listdir('.'))
 
     trainer = load_trainer(input_model_name, output_model_path)
 

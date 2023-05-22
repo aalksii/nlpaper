@@ -98,18 +98,16 @@ jobs:
         run: |
           huggingface-cli login --token $HUGGINGFACE_TOKEN
 
-#          python src/evaluate_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
-
       - name: Pre-training distilbert
         run: |
+          python src/evaluate_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
           python src/train_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/distilbert-base-uncased-ml-arxiv-papers'
           python src/evaluate_model.py -in './models/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
         if: matrix.model_name == 'distilbert'
 
-#        python src/evaluate_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
-
       - name: Pre-training albert
         run: |
+          python src/evaluate_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
           python src/train_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/albert-base-v2-ml-arxiv-papers'
           python src/evaluate_model.py -in './models/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
         if: matrix.model_name == 'albert'
