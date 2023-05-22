@@ -1,5 +1,3 @@
-import os
-
 import click
 
 from configs.huggingface_config import (
