@@ -95,7 +95,9 @@ jobs:
 
       - name: Pre-training ${{ matrix.model_name }}
         run: |
+          python src/evaluate_model.py --input_model_name ${{ matrix.model_name }} --to_file 'models/metrics.csv'
           python src/train_model.py --input_model_name ${{ matrix.model_name }} --output_model_name 'models/${{ matrix.model_name }}'
+          python src/evaluate_model.py --input_model_name 'models/${{ matrix.model_name }}' --to_file 'models/metrics.csv'
 #        if: false
 
       - uses: actions/upload-artifact@v3
@@ -103,7 +105,7 @@ jobs:
         with:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
-        if: false
+#        if: false
 
   fine-tune-model:
     name: Fine-tune model
@@ -142,6 +144,7 @@ jobs:
       - name: Fine-tuning model
         run: |
           python src/train_model.py --input_model_name 'models/${{ matrix.model_name }}' --output_model_name 'models/${{ matrix.model_name }}-finetuned'
+          python src/evaluate_model.py --input_model_name 'models/${{ matrix.model_name }}-finetuned' --to_file 'models/metrics.csv'
 
       - uses: actions/upload-artifact@v3
         id: upload-huggingface-models
@@ -149,11 +152,11 @@ jobs:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
 
-      - name: push model
-        env:
-          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-        run: |
-          huggingface-cli login --token $HUGGINGFACE_TOKEN
+#      - name: push model
+#        env:
+#          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+#        run: |
+#          huggingface-cli login --token $HUGGINGFACE_TOKEN
 
   select-model:
     name: Select best model
@@ -188,7 +191,8 @@ jobs:
           name: huggingface-models-albert
           path: models-albert
 
-      - run: echo 'Selecting best model...'
+      - run: |
+          echo 'Selecting best model...'
 
       - name: Save the best model as an artifact
         uses: actions/upload-artifact@v3
