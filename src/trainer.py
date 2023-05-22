@@ -32,7 +32,8 @@ def load_trainer(input_model_name,
         # Load model, model config and tokenizer via Transformers
         custom_config = AutoConfig.from_pretrained(input_model_name)
         custom_config.output_hidden_states = True
-        tokenizer = AutoTokenizer.from_pretrained(input_model_name)
+        tokenizer = AutoTokenizer.from_pretrained(input_model_name,
+                                                  config=custom_config)
         model = AutoModelForMaskedLM.from_pretrained(input_model_name,
                                                      config=custom_config)
     else:
