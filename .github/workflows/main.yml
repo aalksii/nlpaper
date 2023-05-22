@@ -101,11 +101,11 @@ jobs:
         if: matrix.model_name == 'distilbert'
 
       - name: Pre-training albert
-          run: |
-            python src/evaluate_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
-            python src/train_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/albert-base-v2-ml-arxiv-papers'
-            python src/evaluate_model.py -in './models/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
-          if: matrix.model_name == 'albert'
+        run: |
+          python src/evaluate_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
+          python src/train_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/albert-base-v2-ml-arxiv-papers'
+          python src/evaluate_model.py -in './models/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
+        if: matrix.model_name == 'albert'
 
       - uses: actions/upload-artifact@v3
         id: upload-huggingface-models
@@ -146,11 +146,6 @@ jobs:
         with:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
-
-      - name: Fine-tuning model
-        run: |
-          python src/train_model.py --input_model_name './models/${{ matrix.model_name }}' --output_model_name './models/${{ matrix.model_name }}-finetuned'
-          python src/evaluate_model.py --input_model_name './models/${{ matrix.model_name }}-finetuned' --to_file './models/metrics.csv'
 
       - name: Fine-tuning distilbert
         run: |
