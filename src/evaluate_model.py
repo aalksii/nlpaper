@@ -34,7 +34,7 @@ def evaluate(input_model_name, to_file):
           f'Model: {input_model_name}')
 
     os.makedirs(to_file, exist_ok=True)
-    with open(to_file, 'a') as file:
+    with open(to_file, 'a+') as file:
         file.write(f'{input_model_name};{loss};{ppl};{diff_time}\n')
 
 
