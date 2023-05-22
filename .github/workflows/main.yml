@@ -49,11 +49,11 @@ jobs:
           key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
       - if: steps.python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements.txt
-      - uses: actions/cache@v3
-        id: huggingface-cache
-        with:
-          path: ~/.cache/huggingface
-          key: huggingface-cache
+#      - uses: actions/cache@v3
+#        id: huggingface-cache
+#        with:
+#          path: ~/.cache/huggingface
+#          key: huggingface-cache
 
       - run: |
           python src/pull_data.py
@@ -83,11 +83,11 @@ jobs:
         with:
           path: ${{ env.pythonLocation }}
           key: ${{ env.pythonLocation }}-${{ hashFiles('requirements-dev.txt') }}
-      - uses: actions/cache@v3
-        id: huggingface-cache
-        with:
-          path: ~/.cache/huggingface
-          key: huggingface-cache
+#      - uses: actions/cache@v3
+#        id: huggingface-cache
+#        with:
+#          path: ~/.cache/huggingface
+#          key: huggingface-cache
       - uses: actions/download-artifact@v3
         with:
           name: huggingface-data
