@@ -93,11 +93,11 @@ jobs:
           name: huggingface-data
           path: data
 
-      - name: Login Hugging Face
-        env:
-          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-        run: |
-          huggingface-cli login --token $HUGGINGFACE_TOKEN
+#      - name: Login Hugging Face
+#        env:
+#          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+#        run: |
+#          huggingface-cli login --token $HUGGINGFACE_TOKEN
 
       - name: Pre-training distilbert
         run: |
@@ -157,11 +157,11 @@ jobs:
           path: models
 #        if: steps.upload-huggingface-models.outputs.exists
 
-      - name: Login Hugging Face
-        env:
-          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-        run: |
-          huggingface-cli login --token $HUGGINGFACE_TOKEN
+#      - name: Login Hugging Face
+#        env:
+#          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+#        run: |
+#          huggingface-cli login --token $HUGGINGFACE_TOKEN
 
       - name: Fine-tuning distilbert
         run: |
