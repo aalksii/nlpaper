@@ -19,8 +19,8 @@ from trainer import load_trainer
               help='Path to save evaluation metrics')
 def evaluate(input_model_name, to_file):
     trainer = load_trainer(input_model_name,
-                            input_model_name,
-                            push_to_hub=False)
+                           input_model_name,
+                           push_to_hub=False)
 
     start_time = time.time()
     loss = trainer.evaluate()['eval_loss']
