@@ -96,9 +96,9 @@ jobs:
 
       - name: Pre-training ${{ matrix.model_name }}
         run: |
-          python src/evaluate_model.py --input_model_name ${{ matrix.model_name }} --to_file 'models/metrics.csv'
-          python src/train_model.py --input_model_name ${{ matrix.model_name }} --output_model_name 'models/${{ matrix.model_name }}'
-          python src/evaluate_model.py --input_model_name 'models/${{ matrix.model_name }}' --to_file 'models/metrics.csv'
+          python src/evaluate_model.py --input_model_name ${{ matrix.model_name }} --to_file './models/metrics.csv'
+          python src/train_model.py --input_model_name ${{ matrix.model_name }} --output_model_name './models/${{ matrix.model_name }}'
+          python src/evaluate_model.py --input_model_name './models/${{ matrix.model_name }}' --to_file './models/metrics.csv'
 #        if: false
 
       - uses: actions/upload-artifact@v3
@@ -144,8 +144,8 @@ jobs:
 
       - name: Fine-tuning model
         run: |
-          python src/train_model.py --input_model_name 'models/${{ matrix.model_name }}' --output_model_name 'models/${{ matrix.model_name }}-finetuned'
-          python src/evaluate_model.py --input_model_name 'models/${{ matrix.model_name }}-finetuned' --to_file 'models/metrics.csv'
+          python src/train_model.py --input_model_name './models/${{ matrix.model_name }}' --output_model_name './models/${{ matrix.model_name }}-finetuned'
+          python src/evaluate_model.py --input_model_name './models/${{ matrix.model_name }}-finetuned' --to_file './models/metrics.csv'
 
       - uses: actions/upload-artifact@v3
         id: upload-huggingface-models
@@ -192,8 +192,9 @@ jobs:
           name: huggingface-models-albert
           path: models-albert
 
-      - run: |
-          echo 'Selecting best model...'
+      - name: Select the best model
+        run: |
+          python src/select_model.py -ff './models-distilbert/metrics.csv' -ff './models-albert/metrics.csv' -tf './models/best_model_name.txt'
 
       - name: Save the best model as an artifact
         uses: actions/upload-artifact@v3

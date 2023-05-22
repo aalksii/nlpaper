@@ -16,7 +16,7 @@ from trainer import load_trainer
               help='Path to model or name on Hugging Face')
 @click.option('--to_file',
               default=eval_metrics_path,
-              help='Path to save metrics (perplexity)')
+              help='Path to save evaluation metrics')
 def evaluate(input_model_name, to_file):
     trainer = load_trainer(input_model_name)
 
