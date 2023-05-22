@@ -15,7 +15,7 @@ jobs:
   lint-flake:
     name: Lint with flake8
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, '[build]') || contains(github.ref_name, 'main') || contains(github.ref_name, 'releases'])
+    if: contains(github.event.head_commit.message, '[build]') || contains(github.ref_name, 'main') || contains(github.ref_name, 'releases')
 
     steps:
       - uses: actions/checkout@v3
