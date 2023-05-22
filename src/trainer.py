@@ -2,6 +2,7 @@ import collections
 
 import numpy as np
 from datasets import load_from_disk
+import transformers
 from transformers import (
     AutoModelForMaskedLM,
     DataCollatorForLanguageModeling,
@@ -28,24 +29,19 @@ from configs.huggingface_config import (
 def load_trainer(input_model_name,
                  output_model_path=None,
                  push_to_hub=push_to_hub_config):
-    custom_config = AutoConfig.from_pretrained(input_model_name)
-    custom_config.output_hidden_states = True
-    tokenizer = AutoTokenizer.from_pretrained(input_model_name,
-                                              config=custom_config)
-    model = AutoModelForMaskedLM.from_pretrained(input_model_name,
-                                                 config=custom_config)
-    # if './' in input_model_name:
-    #     # Load model, model config and tokenizer via Transformers
-    #     custom_config = AutoConfig.from_pretrained(input_model_name)
-    #     custom_config.output_hidden_states = True
-    #     tokenizer = AutoTokenizer.from_pretrained(input_model_name,
-    #                                               config=custom_config)
-    #     model = AutoModelForMaskedLM.from_pretrained(input_model_name,
-    #                                                  config=custom_config)
-    # else:
-    #     # Load tokenizer and model
-    #     tokenizer = AutoTokenizer.from_pretrained(input_model_name)
-    #     model = AutoModelForMaskedLM.from_pretrained(input_model_name)
+    print(transformers.__version__)
+    if './' in input_model_name:
+        # Load model, model config and tokenizer via Transformers
+        custom_config = AutoConfig.from_pretrained(input_model_name)
+        custom_config.output_hidden_states = True
+        tokenizer = AutoTokenizer.from_pretrained(input_model_name,
+                                                  config=custom_config)
+        model = AutoModelForMaskedLM.from_pretrained(input_model_name,
+                                                     config=custom_config)
+    else:
+        # Load tokenizer and model
+        tokenizer = AutoTokenizer.from_pretrained(input_model_name)
+        model = AutoModelForMaskedLM.from_pretrained(input_model_name)
 
     # Load prepared dataset
     processed_dataset = load_from_disk(
