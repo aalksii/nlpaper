@@ -103,8 +103,6 @@ jobs:
         run: |
           python src/evaluate_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
           python src/train_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/distilbert-base-uncased-ml-arxiv-papers'
-#          python src/evaluate_model.py -in 'distilbert-base-uncased' -out './models/metrics.csv'
-#          python src/train_model.py -in 'distilbert-base-uncased' -out './models/distilbert-base-uncased-ml-arxiv-papers'
           python src/evaluate_model.py -in './models/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
         if: matrix.model_name == 'distilbert'
 
