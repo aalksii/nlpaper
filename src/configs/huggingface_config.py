@@ -23,5 +23,5 @@ weight_decay = 0.01
 # Logging
 logging_strategy = 'epoch'
 
-# Metrics log
+# Metrics log file
 eval_metrics_path = 'models/metrics.csv'
