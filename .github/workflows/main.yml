@@ -93,23 +93,29 @@ jobs:
           name: huggingface-data
           path: data
 
-#      - name: Login Hugging Face
-#        env:
-#          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-#        run: |
-#          huggingface-cli login --token $HUGGINGFACE_TOKEN
+      - name: Login Hugging Face
+        env:
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        run: |
+          huggingface-cli login --token $HUGGINGFACE_TOKEN
+
+#          python src/evaluate_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
+#          python src/train_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/distilbert-base-uncased-ml-arxiv-papers'
 
       - name: Pre-training distilbert
         run: |
-          python src/evaluate_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
-          python src/train_model.py -in 'aalksii/distilbert-base-uncased-ml-arxiv-papers' -out './models/distilbert-base-uncased-ml-arxiv-papers'
+          python src/evaluate_model.py -in 'distilbert-base-uncased' -out './models/metrics.csv'
+          python src/train_model.py -in 'distilbert-base-uncased' -out './models/distilbert-base-uncased-ml-arxiv-papers'
           python src/evaluate_model.py -in './models/distilbert-base-uncased-ml-arxiv-papers' -out './models/metrics.csv'
         if: matrix.model_name == 'distilbert'
 
+#          python src/evaluate_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
+#          python src/train_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/albert-base-v2-ml-arxiv-papers'
+
       - name: Pre-training albert
         run: |
-          python src/evaluate_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
-          python src/train_model.py -in 'aalksii/albert-base-v2-ml-arxiv-papers' -out './models/albert-base-v2-ml-arxiv-papers'
+          python src/evaluate_model.py -in 'albert-base-v2' -out './models/metrics.csv'
+          python src/train_model.py -in 'albert-base-v2' -out './models/albert-base-v2-ml-arxiv-papers'
           python src/evaluate_model.py -in './models/albert-base-v2-ml-arxiv-papers' -out './models/metrics.csv'
         if: matrix.model_name == 'albert'
 
@@ -153,11 +159,11 @@ jobs:
           path: models
 #        if: steps.upload-huggingface-models.outputs.exists
 
-#      - name: Login Hugging Face
-#        env:
-#          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-#        run: |
-#          huggingface-cli login --token $HUGGINGFACE_TOKEN
+      - name: Login Hugging Face
+        env:
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        run: |
+          huggingface-cli login --token $HUGGINGFACE_TOKEN
 
       - name: Fine-tuning distilbert
         run: |
