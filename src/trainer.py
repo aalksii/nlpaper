@@ -15,7 +15,7 @@ from configs.huggingface_config import (
     batch_size,
     trained_model_path,
     dataset_path,
-    push_to_hub,
+    push_to_hub as push_to_hub_config,
     fp16,
     wwm_probability,
     wwm_collator,
@@ -26,7 +26,7 @@ from configs.huggingface_config import (
 )
 
 
-def load_trainer(input_model_name):
+def load_trainer(input_model_name, push_to_hub=push_to_hub_config):
     # Load tokenizer and model
     tokenizer = AutoTokenizer.from_pretrained(input_model_name)
     model = AutoModelForMaskedLM.from_pretrained(input_model_name)
