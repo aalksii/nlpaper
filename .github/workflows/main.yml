@@ -141,11 +141,11 @@ jobs:
         with:
           name: huggingface-data
           path: data
-      - if: steps.upload-huggingface-models.outputs.exists
-        uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
+#        if: steps.upload-huggingface-models.outputs.exists
 
       - name: Fine-tuning distilbert
         run: |
