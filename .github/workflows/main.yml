@@ -69,7 +69,8 @@ jobs:
 
     strategy:
       matrix:
-        model_name: [distilbert, albert]
+        model_name: ['aalksii/distilbert-base-uncased-ml-arxiv-papers',
+                     'aalksii/albert-base-v2-ml-arxiv-papers']
 
     steps:
       - uses: actions/checkout@v3
@@ -91,10 +92,10 @@ jobs:
           name: huggingface-data
           path: data
 
-      - name: Training ${{ matrix.model_name }}
+      - name: Pre-training ${{ matrix.model_name }}
         run: |
-          python src/train_model.py
-        if: false
+          python src/train_model.py --input_model_name ${{ matrix.model_name }} --output_model_name 'models/${{ matrix.model_name }}'
+#        if: false
 
       - uses: actions/upload-artifact@v3
         id: upload-huggingface-models
@@ -137,9 +138,9 @@ jobs:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
 
-      - run: |
-          echo 'Training ${{ matrix.model_name }}...'
-          python src/train_model.py
+      - name: Fine-tuning model
+        run: |
+          python src/train_model.py --input_model_name 'models/${{ matrix.model_name }}' --output_model_name 'models/${{ matrix.model_name }}-finetuned'
 
       - uses: actions/upload-artifact@v3
         id: upload-huggingface-models

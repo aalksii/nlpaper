@@ -17,6 +17,8 @@ push_to_hub = False
 fp16 = False  # Use it for GPU
 wwm_collator = True
 num_train_epochs = 3
+learning_rate = 2e-5
+weight_decay = 0.01
 
 # Logging
 logging_strategy = 'epoch'

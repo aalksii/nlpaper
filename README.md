@@ -65,3 +65,11 @@ be easier for a model to adapt to a new domain.
 
 ![deployment_diagram](media/deployment_diagram.jpg)
 *Figure 3. Deployment pipeline*
+
+## Next steps
+
+Next possible steps to take:
+
+- develop a cross-validation evaluation pipeline to 
+ensure that perplexity is not affected by random masking;
+
