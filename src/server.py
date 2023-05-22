@@ -1,7 +1,8 @@
+import click
 from flask import Flask, jsonify, request
 
-from predict import fill_mask, summarize
 from configs.server_config import rest_api_port
+from predict import fill_mask, summarize
 
 app = Flask(__name__)
 
@@ -26,5 +27,13 @@ def summarize_():
     })
 
 
+@click.command
+@click.option('--port',
+              default=rest_api_port,
+              help='Port for REST API')
+def run(port):
+    app.run(debug=True, port=port)
+
+
 if __name__ == '__main__':
-    app.run(debug=True, port=rest_api_port)
+    run()

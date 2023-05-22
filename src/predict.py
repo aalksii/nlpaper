@@ -1,16 +1,18 @@
 from summarizer import Summarizer
 from transformers import pipeline
 
+from configs.huggingface_config import best_model_name
+
 
 def fill_mask(x):
     unmasker = pipeline('fill-mask',
-                        model='distilbert-base-uncased')
+                        model=best_model_name)
     output = unmasker(x)[0]['sequence']
     return output
 
 
 def summarize(x):
-    summarizer = Summarizer(model='distilbert-base-uncased')
+    summarizer = Summarizer(model=best_model_name)
     output = summarizer(x, ratio=0.2, return_as_list=False)
     return output
 

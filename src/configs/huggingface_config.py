@@ -25,3 +25,11 @@ logging_strategy = 'epoch'
 
 # Metrics log file
 eval_metrics_path = 'models/metrics.csv'
+
+# Best model name
+model_path = Path('best_model_name.txt')
+if model_path.exists():
+    with model_path.open() as f:
+        best_model_name = f.readline()
+else:
+    best_model_name = model_checkpoint_hf
