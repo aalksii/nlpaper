@@ -54,14 +54,14 @@ be easier for a model to adapt to a new domain.
 ### Component diagram
 
 ![component_diagram](media/component_diagram.jpg)
-<center>Figure 1. Pipeline components</center>
+*Figure 1. Pipeline components*
 
 ### Activity diagram
 
 ![activity_diagram](media/activity_diagram.jpg)
-<center>Figure 2. Model usage pipeline</center>
+*Figure 2. Model usage pipeline*
 
 ### Deployment diagram
 
 ![deployment_diagram](media/deployment_diagram.jpg)
-<center>Figure 3. Deployment pipeline</center>
+*Figure 3. Deployment pipeline*
