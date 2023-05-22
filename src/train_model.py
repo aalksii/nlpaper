@@ -16,8 +16,8 @@ from trainer import load_trainer
 @click.option('--output_model_name',
               default=trained_model_path,
               help='Path to save the trained model')
-def train(input_model_name):
-    print(input_model_name)
+def train(input_model_name, output_model_name):
+    print(input_model_name, output_model_name)
 
     trainer = load_trainer(input_model_name)
 
@@ -35,8 +35,8 @@ def train(input_model_name):
     print(f'>>> It\'s  {div:.2f} times better!')
 
     if trained_model_path is not None:
-        trainer.save_model(trained_model_path)
-        print(f'Model {input_model_name} saved to {trained_model_path}')
+        trainer.save_model(output_model_name)
+        print(f'Model {input_model_name} saved to {output_model_name}')
 
 
 if __name__ == '__main__':
