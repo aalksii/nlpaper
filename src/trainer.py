@@ -8,12 +8,11 @@ from transformers import (
     default_data_collator,
     TrainingArguments,
     Trainer,
-    AutoTokenizer, AutoConfig, AutoModel
+    AutoTokenizer, AutoConfig
 )
 
 from configs.huggingface_config import (
     batch_size,
-    trained_model_path,
     dataset_path,
     push_to_hub as push_to_hub_config,
     fp16,
@@ -26,14 +25,16 @@ from configs.huggingface_config import (
 )
 
 
-def load_trainer(input_model_name, push_to_hub=push_to_hub_config):
+def load_trainer(input_model_name,
+                 output_model_path=None,
+                 push_to_hub=push_to_hub_config):
     if './' in input_model_name:
         # Load model, model config and tokenizer via Transformers
         custom_config = AutoConfig.from_pretrained(input_model_name)
         custom_config.output_hidden_states = True
         tokenizer = AutoTokenizer.from_pretrained(input_model_name)
-        model = AutoModel.from_pretrained(input_model_name,
-                                          config=custom_config)
+        model = AutoModelForMaskedLM.from_pretrained(input_model_name,
+                                                     config=custom_config)
     else:
         # Load tokenizer and model
         tokenizer = AutoTokenizer.from_pretrained(input_model_name)
@@ -50,7 +51,7 @@ def load_trainer(input_model_name, push_to_hub=push_to_hub_config):
     remove_unused_columns = False if wwm_collator else True
 
     training_args = TrainingArguments(
-        output_dir=trained_model_path,
+        output_dir=output_model_path,
         overwrite_output_dir=True,
         evaluation_strategy='epoch',
         learning_rate=learning_rate,
