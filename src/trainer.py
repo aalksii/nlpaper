@@ -8,7 +8,7 @@ from transformers import (
     default_data_collator,
     TrainingArguments,
     Trainer,
-    AutoTokenizer, AutoConfig
+    AutoTokenizer, AutoConfig, AutoModel
 )
 
 from configs.huggingface_config import (
@@ -32,8 +32,8 @@ def load_trainer(input_model_name, push_to_hub=push_to_hub_config):
         custom_config = AutoConfig.from_pretrained(input_model_name)
         custom_config.output_hidden_states = True
         tokenizer = AutoTokenizer.from_pretrained(input_model_name)
-        model = AutoModelForMaskedLM.from_pretrained(input_model_name,
-                                                     config=custom_config)
+        model = AutoModel.from_pretrained(input_model_name,
+                                          config=custom_config)
     else:
         # Load tokenizer and model
         tokenizer = AutoTokenizer.from_pretrained(input_model_name)
