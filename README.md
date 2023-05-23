@@ -20,13 +20,13 @@ To develop an extractive summarization system for research papers.
    sentences;
 8. evaluate metrics on the dataset (perplexity) and select the 
 best model based on the metric;
-9. deploy the service on a application server;
+9. deploy the service on an application server;
 10. optimize the selected model (or data) (i.e. compress it);
 
 ## Dataset
 
 ### Link:
-[ml-arxiv-papers](https://huggingface.co/datasets/aalksii/ml-arxiv-papers)
+[🤗 aalksii/ml-arxiv-papers](https://huggingface.co/datasets/aalksii/ml-arxiv-papers)
 
 ### Description:
 The dataset consists of 117592 research paper abstracts from arXiv. 
@@ -75,6 +75,44 @@ such as Google Colab.
 ![deployment_diagram](media/deployment_diagram.jpg)
 *Figure 4. Deployment pipeline*
 
+## Data preparation
+
+The [manually](https://huggingface.co/datasets/aalksii/ml-arxiv-papers) 
+created dataset (look at the notebook to check how it was done) is loaded on
+🤗 public repository. In this project, I use 🤗 API to load data from this repo.
+All the parameters can be changed using configuration files in `src` directory.
+
+## Pre-training and fine-tuning
+
+The pipeline for training used in the project is: 
+1. Load model weights from [aalksii/distilbert-base-uncased-ml-arxiv-papers](https://huggingface.co/aalksii/distilbert-base-uncased-ml-arxiv-papers) and 
+[aalksii/albert-base-v2-ml-arxiv-papers](https://huggingface.co/aalksii/albert-base-v2-ml-arxiv-papers) 
+-- these models are DistilBERT and ALBERT pre-trained models which fine-tuned 
+on the part of the dataset, but we could skip this step and use common versions 
+of the models.
+2. Pre-train: use part of the dataset to train these models.
+3. Fine-tune: the same as 2, however, we use pre-trained models from step 2.
+
+## Choosing the optimal model
+
+To choose the best model among fine-tuned, I compare them using few metrics.
+The formula to get the score is: 
+`score(model)=RelativeChange(Perplexity(model))+RelativeChange(InferenceTime(model))+InferenceTime(model)`, 
+where `RelativeChange` is computed for pre-trained and fine-tuned models. 
+After we compute score for each model, we can use `argmax` to select 
+the best one.
+
+## Deployment
+
+The first way to deploy the service was Heroku, but it was hard to create 
+a container with the size less than 500 MB (my Python's cache on 
+GitHub takes 2 GB). So I decided to move to DigitalOcean (thanks to GitHub's 
+education pack) and created a droplet with 2 GB RAM, 1 vCPU, and 50 GB SSD.
+After this, I launched a GitHub Actions service as a self-hosted machine to use 
+with the repo (take a look at the workflow file). To process a text and 
+get a summary, we send request to `localhost`, which is hosted by server 
+with REST API. The server uses fine-tuned models to predict the result.
+
 ## Next steps
 
 Next possible steps to take:
@@ -85,4 +123,4 @@ ensure that perplexity is not affected by random masking;
 - replace latex symbols and urls with a new token 
 to let the model pay attention on it;
 
-- use other BERT-based architectures.
+- use other BERT-based architectures;
