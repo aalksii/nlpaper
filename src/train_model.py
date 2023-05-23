@@ -17,7 +17,8 @@ from trainer import load_trainer
               default=trained_model_path,
               help='Path to save the trained model')
 def train(input_model_name, output_model_path):
-    print(f'Input model: {input_model_name}, output model: {output_model_path}')
+    print(f'Input model: {input_model_name}, '
+          f'output model: {output_model_path}')
 
     trainer = load_trainer(input_model_name, output_model_path)
     trainer.train()
