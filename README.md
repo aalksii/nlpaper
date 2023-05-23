@@ -1,7 +1,7 @@
 # NLPaper
 
 **NLPaper** is an app that will help you to highlight the most
-important information of any research paper.
+important information of an ML-related research paper.
 
 ## Aim 
 
@@ -30,7 +30,7 @@ best model based on the metric;
 
 ### Description:
 The dataset consists of 117592 research paper abstracts from arXiv. 
-The train and test ratios 0.9 and 0.1, so it makes 105832 and 11760 rows.
+The train and test ratio is 9:1, so it makes 105832 and 11760 rows.
 The original dataset can be found on 
 [Kaggle](https://www.kaggle.com/datasets/Cornell-University/arxiv) and 
 ML papers only version on 
@@ -49,6 +49,10 @@ it is possible to use such a fine-tuned model for sentence embeddings.
 - The topic of all papers in the dataset is machine learning, so it should
 be easier for a model to adapt to a new domain.
 
+- The selected models are much more compact compared to BERT. 
+Therefore, it is possible to train these models using a single GPU machines, 
+such as Google Colab.
+
 ## Project diagrams
 
 ### Component diagram
@@ -56,15 +60,20 @@ be easier for a model to adapt to a new domain.
 ![component_diagram](media/component_diagram.jpg)
 *Figure 1. Pipeline components*
 
+### Communication diagram
+
+![communication_diagram](media/communication_diagram.jpg)
+*Figure 2. Text processing communication pipeline*
+
 ### Activity diagram
 
 ![activity_diagram](media/activity_diagram.jpg)
-*Figure 2. Model usage pipeline*
+*Figure 3. Model usage pipeline*
 
 ### Deployment diagram
 
 ![deployment_diagram](media/deployment_diagram.jpg)
-*Figure 3. Deployment pipeline*
+*Figure 4. Deployment pipeline*
 
 ## Next steps
 
@@ -73,3 +82,7 @@ Next possible steps to take:
 - develop a cross-validation evaluation pipeline to 
 ensure that perplexity is not affected by random masking;
 
+- replace latex symbols and urls with a new token 
+to let the model pay attention on it;
+
+- use other BERT-based architectures.
