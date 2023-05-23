@@ -243,7 +243,7 @@ jobs:
     name: Run REST API
     runs-on: self-hosted
     #    runs-on: ubuntu-latest
-    needs: deploy
+    needs: push-to-prod
 
     steps:
       - uses: actions/checkout@v3
