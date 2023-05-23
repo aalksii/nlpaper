@@ -17,18 +17,15 @@ from trainer import load_trainer
               default=trained_model_path,
               help='Path to save the trained model')
 def train(input_model_name, output_model_path):
-    print(input_model_name, output_model_path)
+    print(f'Input model: {input_model_name}, output model: {output_model_path}')
 
     trainer = load_trainer(input_model_name, output_model_path)
-
     trainer.train()
 
     os.makedirs(output_model_path, exist_ok=True)
-    if trained_model_path is not None:
+    if output_model_path is not None:
         trainer.save_model(output_model_path)
         print(f'Saved model {input_model_name} to {output_model_path}')
-        print(os.listdir('.'))
-        print(os.listdir(output_model_path))
 
 
 if __name__ == '__main__':

@@ -30,10 +30,6 @@ def load_trainer(input_model_name,
                  output_model_path=None,
                  push_to_hub=push_to_hub_config):
     if './' in input_model_name:
-        print(os.listdir('.'))
-        print(os.listdir(input_model_name))
-        print('aalksii:', os.listdir('./aalksii'))
-        print('./models:', os.listdir('./models'))
         # Load model, model config and tokenizer via Transformers
         custom_config = AutoConfig.from_pretrained(input_model_name,
                                                    local_files_only=True)
