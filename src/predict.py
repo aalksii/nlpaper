@@ -2,6 +2,8 @@ from summarizer import Summarizer
 from transformers import pipeline
 
 from configs.huggingface_config import best_model_name
+from configs.summarizer_config import return_as_list, ratio
+from model_utils import load_tokenizer_and_model
 
 
 def fill_mask(x):
@@ -12,8 +14,10 @@ def fill_mask(x):
 
 
 def summarize(x):
-    summarizer = Summarizer(model=best_model_name)
-    output = summarizer(x, ratio=0.2, return_as_list=False)
+    tokenizer, model = load_tokenizer_and_model(best_model_name)
+
+    summarizer = Summarizer(custom_tokenizer=tokenizer, custom_model=model)
+    output = summarizer(x, ratio=ratio, return_as_list=return_as_list)
     return output
 
 

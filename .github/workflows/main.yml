@@ -273,3 +273,39 @@ jobs:
       - name: Deploy model with Flask
         run: |
           nohup python src/server.py > server.log &
+
+  test-request:
+    name: Test REST API
+    runs-on: self-hosted
+    #    runs-on: ubuntu-latest
+    needs: run-server
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - uses: actions/cache@v3
+        id: python-cache
+        with:
+          path: ${{ github.workspace }}
+          key: ${{ github.workspace }}-${{ hashFiles('requirements-dev.txt') }}
+      - if: steps.python-cache.outputs.cache-hit != 'true'
+        run: pip install -r requirements-dev.txt
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-models-distilbert
+          path: models-distilbert
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-models-albert
+          path: models-albert
+      - name: Load the best model as an artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: huggingface-best-model
+          path: models
+
+      - name: Test model
+        run: |
+          python src/request.py 'New study links disturbed [MASK] metabolism.' fill_mask
+          python src/request.py 'New study links. Disturbed protein metabolism. In depressed individuals to disruption of the gut microbiome.' summarize
