@@ -39,7 +39,7 @@ def select(from_files, to_file):
     df = pd.DataFrame(differences)
 
     def score(row):
-        row['score'] = row['ppl_boost'] + row['time_boost'] + row['time']
+        row['score'] = row['ppl_boost'] + row['time_boost'] + 1 / row['time']
         return row
 
     df = df.apply(score, axis=1)

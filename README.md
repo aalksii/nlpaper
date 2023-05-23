@@ -97,7 +97,7 @@ of the models.
 
 To choose the best model among fine-tuned, I compare them using few metrics.
 The formula to get the score is: 
-`score(model)=RelativeChange(Perplexity(model))+RelativeChange(InferenceTime(model))+InferenceTime(model)`, 
+`score(model)=RelativeChange(Perplexity(model))+RelativeChange(InferenceTime(model))+1/InferenceTime(model)`, 
 where `RelativeChange` is computed for pre-trained and fine-tuned models. 
 After we compute score for each model, we can use `argmax` to select 
 the best one.
