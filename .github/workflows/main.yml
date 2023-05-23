@@ -305,7 +305,7 @@ jobs:
           name: huggingface-best-model
           path: models
 
-      - name: Test model
+      - name: Test requests
         run: |
           python src/request.py 'New study links disturbed [MASK] metabolism.' fill_mask
           python src/request.py 'New study links. Disturbed protein metabolism. In depressed individuals to disruption of the gut microbiome.' summarize
