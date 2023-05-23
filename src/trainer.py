@@ -8,7 +8,8 @@ from transformers import (
     default_data_collator,
     TrainingArguments,
     Trainer,
-    AutoTokenizer, AutoConfig
+    AutoTokenizer,
+    # AutoConfig
 )
 
 from configs.huggingface_config import (
