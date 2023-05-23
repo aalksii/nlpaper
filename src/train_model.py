@@ -27,6 +27,8 @@ def train(input_model_name, output_model_path):
     if trained_model_path is not None:
         trainer.save_model(output_model_path)
         print(f'Saved model {input_model_name} to {output_model_path}')
+        print(os.listdir('.'))
+        print(os.listdir(output_model_path))
 
 
 if __name__ == '__main__':
