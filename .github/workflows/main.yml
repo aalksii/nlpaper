@@ -92,11 +92,6 @@ jobs:
         with:
           name: huggingface-data
           path: data
-      - name: Login Hugging Face
-        env:
-          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-        run: |
-          huggingface-cli login --token $HUGGINGFACE_TOKEN
 
       - name: Pre-training distilbert
         run: |
@@ -150,12 +145,6 @@ jobs:
         with:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
-#        if: steps.upload-huggingface-models.outputs.exists
-      - name: Login Hugging Face
-        env:
-          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-        run: |
-          huggingface-cli login --token $HUGGINGFACE_TOKEN
 
       - name: Fine-tuning distilbert
         run: |
@@ -175,7 +164,7 @@ jobs:
           name: huggingface-models-${{ matrix.model_name }}
           path: models
 
-#      - name: push model
+#      - name: Push model to hub
 #        env:
 #          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
 #        run: |
@@ -235,8 +224,8 @@ jobs:
       - run: echo 'Optimizing...'
         if: false
 
-  deploy:
-    name: Deploy model
+  push-to-prod:
+    name: Push to prod
     runs-on: ubuntu-latest
     needs: optimize-model
 
@@ -246,25 +235,14 @@ jobs:
           fetch-depth: 0
       - name: Push the release to production branch
         run: |
-          echo 'Deploying...'
-
           git config user.name github-actions
           git config user.email github-actions@github.com
-
           git push --force origin ${{ github.ref_name }}:prod
-
-#          // Write a name of the best model to a config file:
-#          git checkout prod
-#          echo 'run_id: ${{ github.run_id }}' > run_id.txt
-#          git add .
-#          git commit -m 'Release for run_id: ${{ github.run_id }} from ${{ github.ref_name }}'
-#          git push origin prod
-#          // And move this model name next to deploy server
 
   run-server:
     name: Run REST API
-#    runs-on: self-hosted
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    #    runs-on: ubuntu-latest
     needs: deploy
 
     steps:
@@ -278,13 +256,20 @@ jobs:
       - if: steps.python-cache.outputs.cache-hit != 'true'
         run: pip install -r requirements-dev.txt
 
-      - if: steps.upload-huggingface-best-model.outputs.cache-hit != 'true'
-        name: Load the best model as an artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-models-distilbert
+          path: models-distilbert
+      - uses: actions/download-artifact@v3
+        with:
+          name: huggingface-models-albert
+          path: models-albert
+      - name: Load the best model as an artifact
         uses: actions/download-artifact@v3
         with:
           name: huggingface-best-model
           path: models
 
-      - name: Deploy model
+      - name: Deploy model with Flask
         run: |
-          python src/server.py
+          nohup python src/server.py > server.log &

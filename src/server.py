@@ -28,7 +28,7 @@ def summarize_():
 
 
 @click.command
-@click.option('--port',
+@click.option('--port', '-p',
               default=rest_api_port,
               help='Port for REST API')
 def run(port):
