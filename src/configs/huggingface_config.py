@@ -16,7 +16,7 @@ wwm_probability = 0.15
 push_to_hub = False
 fp16 = False  # Use it for GPU
 wwm_collator = True
-num_train_epochs = 3
+num_train_epochs = 1
 learning_rate = 2e-5
 weight_decay = 0.01
 
