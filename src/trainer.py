@@ -3,12 +3,10 @@ import collections
 import numpy as np
 from datasets import load_from_disk
 from transformers import (
-    AutoModelForMaskedLM,
     DataCollatorForLanguageModeling,
     default_data_collator,
     TrainingArguments,
-    Trainer,
-    AutoTokenizer, AutoConfig
+    Trainer
 )
 
 from configs.huggingface_config import (
@@ -23,26 +21,13 @@ from configs.huggingface_config import (
     learning_rate,
     weight_decay,
 )
+from model_utils import load_tokenizer_and_model
 
 
 def load_trainer(input_model_name,
                  output_model_path=None,
                  push_to_hub=push_to_hub_config):
-    if './' in input_model_name:
-        # Load model, model config and tokenizer via Transformers
-        custom_config = AutoConfig.from_pretrained(input_model_name,
-                                                   local_files_only=True)
-        custom_config.output_hidden_states = True
-        tokenizer = AutoTokenizer.from_pretrained(input_model_name,
-                                                  config=custom_config,
-                                                  local_files_only=True)
-        model = AutoModelForMaskedLM.from_pretrained(input_model_name,
-                                                     config=custom_config,
-                                                     local_files_only=True)
-    else:
-        # Load tokenizer and model
-        tokenizer = AutoTokenizer.from_pretrained(input_model_name)
-        model = AutoModelForMaskedLM.from_pretrained(input_model_name)
+    tokenizer, model = load_tokenizer_and_model(input_model_name)
 
     # Load prepared dataset
     processed_dataset = load_from_disk(
