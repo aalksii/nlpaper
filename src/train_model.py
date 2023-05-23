@@ -1,3 +1,5 @@
+import os
+
 import click
 
 from configs.huggingface_config import (
@@ -21,10 +23,10 @@ def train(input_model_name, output_model_path):
 
     trainer.train()
 
-    # os.makedirs(output_model_name, exist_ok=True)
-    # if trained_model_path is not None:
-    #     trainer.save_model(output_model_name)
-    #     print(f'Saved model {input_model_name} to {output_model_name}')
+    os.makedirs(output_model_path, exist_ok=True)
+    if trained_model_path is not None:
+        trainer.save_model(output_model_path)
+        print(f'Saved model {input_model_name} to {output_model_path}')
 
 
 if __name__ == '__main__':
